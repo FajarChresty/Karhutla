@@ -54,6 +54,20 @@ namespace Karhutla
 
         // Stok barter tiap warga
         public List<BarterTraderSave> traders = new List<BarterTraderSave>();
+
+        // Sesi 3 & 4: Resep, Penyelidikan Korupsi, Pemadaman Api, dan Kebangkrutan
+        public List<string> unlockedRecipes = new List<string>();
+        public List<string> collectedClues = new List<string>();
+        public bool corruptionExposed;
+        public int completedFirebreaks;
+        public int extinguishedTrees;
+        public bool fireContained;
+        public int bankruptcyCriticalDays;
+        public bool inBankruptcyCrisis;
+
+        // Sesi 6: Bahaya Lingkungan Tambahan (GDD Bab 8.4)
+        public List<string> stabilizedHazards = new List<string>();
+        public List<string> protectedWaterSources = new List<string>();
     }
 
     /// <summary>
@@ -214,6 +228,43 @@ namespace Karhutla
 
                 foreach (var trader in FindObjectsByType<BarterTrader>(FindObjectsSortMode.None)) d.traders.Add(trader.ExportState());
 
+                // Resep masakan terbuka
+                if (RecipeManager.Instance != null) d.unlockedRecipes = RecipeManager.Instance.GetSavedUnlockedIds();
+
+                // Penyelidikan korupsi
+                if (InvestigationSystem.Instance != null)
+                {
+                    d.collectedClues = InvestigationSystem.Instance.GetSavedClues();
+                    d.corruptionExposed = InvestigationSystem.Instance.CorruptionExposed;
+                }
+
+                // Pemadaman api & sekat bakar
+                if (FirefightingMission.Instance != null)
+                {
+                    d.completedFirebreaks = FirefightingMission.Instance.CompletedFirebreaks;
+                    d.extinguishedTrees = FirefightingMission.Instance.ExtinguishedTreesCount;
+                    d.fireContained = FirefightingMission.Instance.IsFireContained;
+                }
+
+                // Kebangkrutan warung
+                if (BankruptcySystem.Instance != null)
+                {
+                    d.bankruptcyCriticalDays = BankruptcySystem.Instance.ConsecutiveCriticalDays;
+                    d.inBankruptcyCrisis = BankruptcySystem.Instance.IsInFinancialCrisis;
+                }
+
+                // Bahaya Lingkungan (Tanah Gambut Labil & Sumber Air)
+                foreach (var hazard in UnstableGroundHazard.All)
+                {
+                    if (hazard != null && hazard.isStabilized)
+                        d.stabilizedHazards.Add(hazard.zoneName);
+                }
+                foreach (var water in WaterSourceHazard.All)
+                {
+                    if (water != null && water.isProtected)
+                        d.protectedWaterSources.Add(water.sourceName);
+                }
+
                 PlayerPrefs.SetString(SaveKey, JsonUtility.ToJson(d));
                 PlayerPrefs.Save();
                 if (!silent) Notifier.Show("Permainan disimpan (Hari " + d.day + ").");
@@ -319,6 +370,34 @@ namespace Karhutla
                 // 8. Hubungan sosial (dibandingkan dengan hari yang sudah dipulihkan).
                 if (RelationshipSystem.Instance != null) RelationshipSystem.Instance.ReloadFromSave();
 
+                // 9. Resep masakan terbuka
+                if (RecipeManager.Instance != null && d.unlockedRecipes != null) RecipeManager.Instance.RestoreUnlockedIds(d.unlockedRecipes);
+
+                // 10. Penyelidikan korupsi
+                if (InvestigationSystem.Instance != null) InvestigationSystem.Instance.RestoreState(d.collectedClues, d.corruptionExposed);
+
+                // 11. Misi pemadaman api & sekat bakar
+                if (FirefightingMission.Instance != null) FirefightingMission.Instance.RestoreState(d.completedFirebreaks, d.extinguishedTrees, d.fireContained);
+
+                // 12. Sistem kebangkrutan
+                if (BankruptcySystem.Instance != null) BankruptcySystem.Instance.RestoreState(d.bankruptcyCriticalDays, d.inBankruptcyCrisis);
+
+                // 13. Bahaya Lingkungan (Tanah Gambut Labil & Sumber Air)
+                if (d.stabilizedHazards != null)
+                {
+                    foreach (var hazard in UnstableGroundHazard.All)
+                    {
+                        if (hazard != null) hazard.RestoreState(d.stabilizedHazards.Contains(hazard.zoneName));
+                    }
+                }
+                if (d.protectedWaterSources != null)
+                {
+                    foreach (var water in WaterSourceHazard.All)
+                    {
+                        if (water != null) water.RestoreState(d.protectedWaterSources.Contains(water.sourceName));
+                    }
+                }
+
                 if (!silent) Notifier.Show("Permainan dimuat (Hari " + d.day + ").");
                 else Notifier.Show("Melanjutkan permainan: Hari " + d.day + ". (F10 = mulai baru)");
                 return true;
@@ -347,6 +426,7 @@ namespace Karhutla
                 RelationshipSystem.Instance.saveToPlayerPrefs = false;
                 RelationshipSystem.Instance.ResetAll();
             }
+            CommunityEventManager.ClearSavedData();
             Notifier.Show("Data simpan dihapus. Hentikan Play lalu Play lagi untuk mulai dari awal.");
         }
 
@@ -354,6 +434,7 @@ namespace Karhutla
         {
             PlayerPrefs.DeleteKey(SaveKey);
             RelationshipSystem.ClearSavedData();
+            CommunityEventManager.ClearSavedData();
             PlayerPrefs.Save();
         }
     }

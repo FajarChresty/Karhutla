@@ -40,7 +40,28 @@ namespace Karhutla
         private float cookLeft;
         private int readyCount;
 
-        private Recipe Selected { get { return RecipeDatabase.All[recipeIndex % RecipeDatabase.All.Length]; } }
+        private System.Collections.Generic.List<Recipe> AvailableRecipes
+        {
+            get
+            {
+                if (RecipeManager.Instance != null)
+                {
+                    var list = RecipeManager.Instance.GetUnlockedRecipes();
+                    if (list != null && list.Count > 0) return list;
+                }
+                return new System.Collections.Generic.List<Recipe>(RecipeDatabase.All);
+            }
+        }
+
+        private Recipe Selected
+        {
+            get
+            {
+                var list = AvailableRecipes;
+                if (list.Count == 0) return RecipeDatabase.All[0];
+                return list[recipeIndex % list.Count];
+            }
+        }
 
         private void Update()
         {
@@ -73,15 +94,19 @@ namespace Karhutla
         public override string GetSecondaryPrompt()
         {
             if (state != KitchenState.Idle) return null;
-            var next = RecipeDatabase.All[(recipeIndex + 1) % RecipeDatabase.All.Length];
-            return "Ganti menu (berikutnya: " + next.Name + ")";
+            var list = AvailableRecipes;
+            if (list.Count <= 1) return null;
+            var next = list[(recipeIndex + 1) % list.Count];
+            return "Ganti menu (berikutnya: " + next.Name + ") [" + (recipeIndex % list.Count + 1) + "/" + list.Count + "]";
         }
 
         public override void InteractSecondary()
         {
             if (state != KitchenState.Idle) return;
-            recipeIndex = (recipeIndex + 1) % RecipeDatabase.All.Length;
-            Notifier.Show("Menu dapur: " + Selected.Name + " (" + Selected.IngredientText + ").");
+            var list = AvailableRecipes;
+            if (list.Count <= 1) return;
+            recipeIndex = (recipeIndex + 1) % list.Count;
+            Notifier.Show("Menu dapur: " + Selected.Name + " (" + Selected.IngredientText + "). [" + (recipeIndex + 1) + "/" + list.Count + " resep terbuka]");
         }
 
         public override void Interact()

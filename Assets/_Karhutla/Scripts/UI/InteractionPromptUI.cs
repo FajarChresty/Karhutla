@@ -3,22 +3,36 @@ using UnityEngine.UI;
 
 namespace Karhutla
 {
-    /// <summary>Menampilkan "[E] ..." (dan "[Q] ..." bila ada aksi kedua) saat pemain dekat objek interaktif.</summary>
+    /// <summary>
+    /// Menampilkan prompt interaksi yang adaptif terhadap isi teks saat pemain mendekati objek / NPC.
+    /// Ukuran kotak latar belakang (lebar dan tinggi) otomatis menyesuaikan panjang dan jumlah opsi,
+    /// serta memiliki spasi antar baris yang lega sehingga tidak mepet.
+    /// </summary>
     public class InteractionPromptUI : MonoBehaviour
     {
         private RectTransform panelRect;
         private GameObject panelObject;
         private Text promptText;
 
+        private const float PaddingX = 32f;
+        private const float PaddingY = 18f;
+
         private void Start()
         {
-            var panel = UIFactory.CreatePanel(UIFactory.Canvas.transform, "Panel Prompt Interaksi", new Color(0f, 0f, 0f, 0.7f));
-            UIFactory.Place(panel, new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(0f, 290f), new Vector2(1100f, 70f));
+            var panel = UIFactory.CreatePanel(UIFactory.Canvas.transform, "Panel Prompt Interaksi", new Color(0.04f, 0.05f, 0.08f, 0.82f));
+            // Posisi tetap di atas area dialog/bawah layar, anchor di tengah bawah
+            UIFactory.Place(panel, new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(0f, 195f), new Vector2(240f, 40f));
             panelRect = panel;
             panelObject = panel.gameObject;
 
-            promptText = UIFactory.CreateText(panel, "Teks Prompt", 32, TextAnchor.MiddleCenter, Color.white);
-            UIFactory.Stretch(promptText.rectTransform, 10f, 0f, 10f, 0f);
+            promptText = UIFactory.CreateText(panel, "Teks Prompt", 16, TextAnchor.MiddleCenter, Color.white);
+            // Izinkan text overflow agar perhitungan preferredWidth/preferredHeight akurat
+            promptText.horizontalOverflow = HorizontalWrapMode.Overflow;
+            promptText.verticalOverflow = VerticalWrapMode.Overflow;
+            // Berikan spasi antar baris yang lega agar opsi tidak mepet
+            promptText.lineSpacing = 1.42f;
+
+            UIFactory.Stretch(promptText.rectTransform, PaddingX * 0.5f, PaddingY * 0.5f, PaddingX * 0.5f, PaddingY * 0.5f);
             panelObject.SetActive(false);
         }
 
@@ -57,7 +71,15 @@ namespace Karhutla
             }
 
             promptText.text = text;
-            panelRect.sizeDelta = new Vector2(1100f, 20f + 50f * lines);
+
+            // Jika hanya 1 baris (seperti ambil item), pusatkan teks. Jika multi-baris, ratakan kiri agar tombol sejajar rapi
+            promptText.alignment = (lines > 1) ? TextAnchor.MiddleLeft : TextAnchor.MiddleCenter;
+
+            // Kotak background beradaptasi terus menerus dengan teks
+            float targetWidth = Mathf.Max(180f, promptText.preferredWidth + PaddingX);
+            float targetHeight = promptText.preferredHeight + PaddingY;
+
+            panelRect.sizeDelta = new Vector2(targetWidth, targetHeight);
         }
     }
 }

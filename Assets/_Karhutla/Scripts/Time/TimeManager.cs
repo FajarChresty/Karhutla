@@ -77,8 +77,15 @@ namespace Karhutla
 
         [Header("Hari")]
         public int startDay = 1;
-        [Tooltip("GDD 1.4 / 3.3: 90 hari dalam game.")]
-        public int totalDays = 90;
+        [Tooltip("Format 4 Bulan: 120 hari total kalender cerita (1 bulan = 30 hari).")]
+        public int totalDays = 120;
+
+        [Header("Target Gameplay Aktif (Format 50-60 Hari)")]
+        public const int DaysPerMonth = 30;
+        public const int TotalMonths = 4;
+        public const int TargetActiveDays = 60;
+        [Tooltip("Target jumlah hari gameplay aktif yang benar-benar dimainkan oleh pemain (~50-60 hari).")]
+        public int targetDaysPlayed = TargetActiveDays;
 
         [Header("Kalender mingguan (NILAI SEMENTARA)")]
         [Tooltip("Hari-dalam-minggu untuk Hari 1: 0=Senin, 1=Selasa, ... 6=Minggu. GDD 4.2 menyebut hari Minggu spesial tetapi tidak menyebut Hari 1 jatuh pada hari apa.")]
@@ -122,6 +129,16 @@ namespace Karhutla
 
         public static readonly string[] WeekdayNames = { "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu", "Minggu" };
 
+        /// <summary>Bulan berjalan (1 sampai 4).</summary>
+        public int Month { get { return Mathf.Clamp(((Day - 1) / DaysPerMonth) + 1, 1, TotalMonths); } }
+        /// <summary>Hari di dalam bulan berjalan (1 sampai 30).</summary>
+        public int DayInMonth { get { return ((Day - 1) % DaysPerMonth) + 1; } }
+
+        /// <summary>Format tampilan bulan dan hari (misal: 'Bulan 1 - Hari 10').</summary>
+        public string FormattedDate { get { return "Bulan " + Month + " - Hari " + DayInMonth; } }
+        /// <summary>Format pencatatan hari dimainkan aktif (misal: 'Hari Dimainkan: 15 dari 60').</summary>
+        public string FormattedActiveDays { get { return "Hari Dimainkan: " + DaysPlayed + " dari " + targetDaysPlayed; } }
+
         /// <summary>0=Senin ... 6=Minggu untuk hari permainan tertentu.</summary>
         public int WeekdayIndex(int day)
         {
@@ -164,8 +181,12 @@ namespace Karhutla
         /// <summary>Dipicu setelah loncat waktu (debug) agar sistem lain menyinkronkan diri.</summary>
         public event Action OnTimeJumped;
         public event Action OnFinalDayEnded;
+        /// <summary>Dipicu saat kondisi akhir permainan terpenuhi (Hari 120 atau 60 hari aktif): (alasan).</summary>
+        public event Action<string> OnEndingTriggered;
         /// <summary>Dipicu setelah time skip selesai: (hari asal, hari tujuan).</summary>
         public event Action<int, int> OnTimeSkipped;
+
+        public bool IsEndingTriggered { get; private set; }
 
         private int minutesIntoSection;
 
@@ -181,9 +202,11 @@ namespace Karhutla
             TotalMinutes = (Day - 1) * SimulatedMinutesPerDay;
             DaysPlayed = 1;
 
-            // Pengaman: scene lama (V1) belum punya komponen baru ini. Dibuat otomatis jika belum ada.
+            // Pengaman: scene lama belum punya komponen baru ini. Dibuat otomatis jika belum ada.
             if (FindFirstObjectByType<TimeActivityManager>() == null) gameObject.AddComponent<TimeActivityManager>();
             if (FindFirstObjectByType<TimeConfirmUI>() == null) gameObject.AddComponent<TimeConfirmUI>();
+            if (FindFirstObjectByType<PlotPointSkipManager>() == null) gameObject.AddComponent<PlotPointSkipManager>();
+            if (FindFirstObjectByType<EndingManager>() == null) gameObject.AddComponent<EndingManager>();
         }
 
         private void OnDestroy()
@@ -195,6 +218,7 @@ namespace Karhutla
         {
             unitsPerSection = Mathf.Max(1, unitsPerSection);
             simulatedMinutesPerSection = Mathf.Max(1, simulatedMinutesPerSection);
+            if (totalDays <= 90) totalDays = 120; // Otomatis upgrade format lama (90 hari) ke 4 Bulan (120 hari)
             totalDays = Mathf.Max(1, totalDays);
             if (sectionStartHour == null || sectionStartHour.Length != 3) sectionStartHour = new[] { 6f, 11f, 18f };
             if (sectionEndHour == null || sectionEndHour.Length != 3) sectionEndHour = new[] { 10.5f, 16.5f, 23.5f };
@@ -332,6 +356,15 @@ namespace Karhutla
                 DaysPlayed++;                       // hari tujuan dimainkan secara normal
                 DaysSkipped += Mathf.Max(0, elapsed - 1); // hari di antaranya dilewati
                 if (OnTimeSkipped != null) OnTimeSkipped(startDay, Day);
+
+                if (DaysPlayed >= targetDaysPlayed && !FinalDayEnded)
+                {
+                    TriggerEnding("Target " + targetDaysPlayed + " hari gameplay aktif telah tercapai.");
+                }
+                else if (Day >= totalDays && !FinalDayEnded)
+                {
+                    TriggerEnding("Kalender 4 bulan (" + totalDays + " hari) telah selesai.");
+                }
             }
             return elapsed;
         }
@@ -341,6 +374,22 @@ namespace Karhutla
             if (Period == TimeOfDay.Malam)
                 return Day >= totalDays ? "akhir permainan (Hari " + totalDays + " selesai)" : "Pagi Hari ke-" + (Day + 1);
             return ((TimeOfDay)((int)Period + 1)).ToString();
+        }
+
+        /// <summary>
+        /// Pemicu akhir cerita (ending). Dipicu saat kalender mencapai 120 hari (4 bulan)
+        /// atau saat total hari yang dimainkan aktif mencapai target ~50-60 hari.
+        /// </summary>
+        public void TriggerEnding(string reason)
+        {
+            if (FinalDayEnded) return;
+            FinalDayEnded = true;
+            IsEndingTriggered = true;
+            UnitsRemaining = 0;
+            Notifier.Show("Cerita berakhir: " + reason);
+            if (OnUnitsChanged != null) OnUnitsChanged();
+            if (OnFinalDayEnded != null) OnFinalDayEnded();
+            if (OnEndingTriggered != null) OnEndingTriggered(reason);
         }
 
         // ================= Internal =================
@@ -381,20 +430,24 @@ namespace Karhutla
             {
                 if (Day >= totalDays)
                 {
-                    // GDD belum menjelaskan apa yang terjadi setelah Hari 90 (ending TBD). Waktu dihentikan.
-                    FinalDayEnded = true;
-                    UnitsRemaining = 0;
-                    Notifier.Show("Hari ke-" + totalDays + " berakhir. (Ending belum ditentukan di GDD, waktu dihentikan.)");
-                    if (OnUnitsChanged != null) OnUnitsChanged();
-                    if (OnFinalDayEnded != null) OnFinalDayEnded();
+                    TriggerEnding("Kalender 4 bulan (" + totalDays + " hari) telah selesai.");
                     return;
                 }
 
                 Day++;
                 Period = TimeOfDay.Pagi;
-                if (!IsSkipping) DaysPlayed++;
+                if (!IsSkipping)
+                {
+                    DaysPlayed++;
+                    if (DaysPlayed >= targetDaysPlayed)
+                    {
+                        TriggerEnding("Target " + targetDaysPlayed + " hari gameplay aktif telah tercapai.");
+                        return;
+                    }
+                }
+
                 if (OnDayChanged != null) OnDayChanged(Day);
-                if (!IsSkipping) Notifier.Show("Hari ke-" + Day + " dimulai. Pagi.");
+                if (!IsSkipping) Notifier.Show("Hari ke-" + Day + " (" + FormattedDate + ") dimulai. Pagi.");
             }
             else
             {

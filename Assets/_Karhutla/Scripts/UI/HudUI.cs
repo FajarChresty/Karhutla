@@ -46,21 +46,21 @@ namespace Karhutla
         {
             Transform root = UIFactory.Canvas.transform;
 
-            // Panel waktu (kiri atas)
-            var timePanel = UIFactory.CreatePanel(root, "Panel Waktu", new Color(0f, 0f, 0f, 0.55f));
-            UIFactory.Place(timePanel, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(30f, -30f), new Vector2(700f, 190f));
-            timeText = UIFactory.CreateText(timePanel, "Teks Waktu", 28, TextAnchor.MiddleLeft, Color.white);
-            UIFactory.Stretch(timeText.rectTransform, 20f, 5f, 10f, 5f);
+            // Panel waktu (kiri atas) - ukuran diperkecil dan dirapikan agar tidak bertabrakan dengan banner tengah
+            var timePanel = UIFactory.CreatePanel(root, "Panel Waktu", new Color(0f, 0f, 0f, 0.65f));
+            UIFactory.Place(timePanel, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(25f, -25f), new Vector2(500f, 165f));
+            timeText = UIFactory.CreateText(timePanel, "Teks Waktu", 20, TextAnchor.MiddleLeft, Color.white);
+            UIFactory.Stretch(timeText.rectTransform, 16f, 8f, 12f, 8f);
 
-            // Banner bahaya (tengah atas)
+            // Banner bahaya (tengah atas) - dirampingkan agar proporsional
             var dangerPanel = UIFactory.CreatePanel(root, "Panel Bahaya", new Color(0.2f, 0.7f, 0.3f, 0.85f));
-            UIFactory.Place(dangerPanel, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, -30f), new Vector2(720f, 100f));
+            UIFactory.Place(dangerPanel, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, -25f), new Vector2(520f, 80f));
             dangerBackground = dangerPanel.GetComponent<Image>();
-            dangerTitle = UIFactory.CreateText(dangerPanel, "Judul Bahaya", 34, TextAnchor.UpperCenter, Color.white);
+            dangerTitle = UIFactory.CreateText(dangerPanel, "Judul Bahaya", 26, TextAnchor.UpperCenter, Color.white);
             dangerTitle.fontStyle = FontStyle.Bold;
-            UIFactory.Stretch(dangerTitle.rectTransform, 10f, 0f, 10f, 8f);
-            dangerDetail = UIFactory.CreateText(dangerPanel, "Detail Bahaya", 22, TextAnchor.LowerCenter, Color.white);
-            UIFactory.Stretch(dangerDetail.rectTransform, 10f, 8f, 10f, 0f);
+            UIFactory.Stretch(dangerTitle.rectTransform, 8f, 0f, 8f, 6f);
+            dangerDetail = UIFactory.CreateText(dangerPanel, "Detail Bahaya", 17, TextAnchor.LowerCenter, Color.white);
+            UIFactory.Stretch(dangerDetail.rectTransform, 8f, 6f, 8f, 0f);
 
             // Bar survival (kiri bawah)
             Vector2 anchor = new Vector2(0f, 0f);
@@ -77,16 +77,16 @@ namespace Karhutla
             maskText = UIFactory.CreateText(root, "Teks Masker", 22, TextAnchor.LowerLeft, new Color(0.7f, 0.95f, 1f));
             UIFactory.Place(maskText.rectTransform, anchor, pivot, new Vector2(30f, 272f), new Vector2(340f, 30f));
 
-            // Toast (tengah bawah)
-            toastText = UIFactory.CreateText(root, "Teks Toast", 28, TextAnchor.LowerCenter, Color.white);
-            UIFactory.Place(toastText.rectTransform, new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(0f, 360f), new Vector2(1100f, 170f));
+            // Toast notifikasi (tengah bawah) - diperkecil agar tidak menutupi tengah layar
+            toastText = UIFactory.CreateText(root, "Teks Toast", 18, TextAnchor.LowerCenter, Color.white);
+            UIFactory.Place(toastText.rectTransform, new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(0f, 260f), new Vector2(700f, 90f));
             var shadow = toastText.gameObject.AddComponent<Shadow>();
-            shadow.effectDistance = new Vector2(2f, -2f);
+            shadow.effectDistance = new Vector2(1.5f, -1.5f);
 
-            // Bantuan kontrol (kanan bawah)
-            var help = UIFactory.CreateText(root, "Teks Kontrol", 20, TextAnchor.LowerRight, new Color(1f, 1f, 1f, 0.8f));
-            UIFactory.Place(help.rectTransform, new Vector2(1f, 0f), new Vector2(1f, 0f), new Vector2(-30f, 30f), new Vector2(760f, 330f));
-            help.text = "WASD  Gerak     Shift  Lari\nE  Interaksi     Q  Aksi kedua     R  Aksi ketiga (barter)\nZ / C  Putar kamera     Scroll  Zoom     Klik kanan+geser  Putar bebas\nI  Inventaris     K  Hubungan     L  Ringkasan hari\n1-9  Pakai item     G  Buang item basi\n[DEBUG]  T pakai 1 jatah   Y lewati periode\n[DEBUG]  U +1 hari (Shift+U +10)   F api";
+            // Bantuan kontrol (kanan bawah) - font diperkecil dan padat
+            var help = UIFactory.CreateText(root, "Teks Kontrol", 13, TextAnchor.LowerRight, new Color(1f, 1f, 1f, 0.7f));
+            UIFactory.Place(help.rectTransform, new Vector2(1f, 0f), new Vector2(1f, 0f), new Vector2(-20f, 20f), new Vector2(480f, 180f));
+            help.text = "WASD  Gerak     Shift  Lari\nE  Interaksi     Q  Aksi kedua     R  Aksi ketiga (barter)\nZ / C  Putar kamera (4 Arah)     Scroll  Zoom\nI  Inventaris     K  Hubungan     L  Ringkasan hari\n1-9  Pakai item     G  Buang item basi\n[DEBUG]  T jatah   Y periode   U hari (Shift+U +10)   F api\n[DEBUG]  Shift+P Plot Point Skip (simulasi lompatan cerita)";
             help.gameObject.AddComponent<Shadow>().effectDistance = new Vector2(1f, -1f);
         }
 
@@ -113,24 +113,29 @@ namespace Karhutla
 
             string money = inv != null ? TextFormat.Rupiah(inv.Money) : "-";
 
-            // Jatah waktu periode berjalan, mis. [###-] 3/4 (ASCII agar aman di font bawaan).
+            // Jatah waktu periode berjalan, mis. [####] 4/4
             var barText = new StringBuilder("[");
             for (int i = 0; i < time.unitsPerSection; i++) barText.Append(i < time.UnitsRemaining ? '#' : '-');
-            barText.Append("]  ").Append(time.UnitsRemaining).Append('/').Append(time.unitsPerSection);
+            barText.Append("] ").Append(time.UnitsRemaining).Append('/').Append(time.unitsPerSection);
 
             var timeline = DisasterTimeline.Instance;
             string phase = timeline != null ? DisasterTimeline.Label(timeline.CurrentPhase) : "";
 
             string weekday = time.WeekdayName(time.Day);
-            string view = CameraFollow.Instance != null ? "   Kamera: " + CameraFollow.Instance.ViewName : "";
+            string view = CameraFollow.Instance != null ? "   " + CameraFollow.Instance.ViewName : "";
+
+            // Format kalender 4 Bulan ("Bulan 1 - Hari 10") dan pencatatan "Hari Dimainkan: X dari 60"
+            string dateStr = "<b>Bulan " + time.Month + " - Hari " + time.DayInMonth + "</b> (Hari " + time.Day + "/" + time.totalDays + ", " + weekday + ")";
             string header = time.FinalDayEnded
-                ? "Hari " + time.Day + " / " + time.totalDays + " (" + weekday + ")   (berakhir)"
-                : "Hari " + time.Day + " / " + time.totalDays + " (" + weekday + ")   " + time.Period.ToString().ToUpper();
+                ? dateStr + "   <color=#FF7777>(BERAKHIR)</color>"
+                : dateStr + "   <color=#FFFF88>" + time.Period.ToString().ToUpper() + "</color>";
+
+            string playCountStr = "Dimainkan: " + time.DaysPlayed + "/" + time.targetDaysPlayed + " hari   (Dilewati: " + time.DaysSkipped + " hari)";
 
             timeText.text = header + "\n" +
                             "Jatah waktu " + barText + "  |  " + money + "\n" +
-                            "<size=22>" + phase + view + "</size>\n" +
-                            "<size=20>Hari cerita dimainkan " + time.DaysPlayed + ", dilewati " + time.DaysSkipped + "</size>";
+                            "<size=16><color=#CCDDEE>" + phase + view + "</color></size>\n" +
+                            "<size=15><color=#FFE088>" + playCountStr + "</color></size>";
         }
 
         private void UpdateBars()

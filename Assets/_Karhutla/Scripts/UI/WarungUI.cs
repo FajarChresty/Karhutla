@@ -7,21 +7,36 @@ namespace Karhutla
     /// <summary>
     /// Panel info warung (kanan atas): status buka/tutup/libur, sisa waktu sesi, pendapatan, kepuasan,
     /// stok hidangan (gudang + kulkas) dan daftar pesanan pelanggan yang sedang berjalan.
-    /// Hanya membaca data dari WarungSystem / WarungStorage / DayReportSystem.
+    /// Tinggi kotak panel beradaptasi secara dinamis (responsif) sesuai panjang konten teks.
     /// </summary>
     public class WarungUI : MonoBehaviour
     {
+        public static WarungUI Instance { get; private set; }
+        public float CurrentHeight { get; private set; } = 180f;
+
+        private RectTransform panelRect;
         private Text infoText;
         private float timer;
         private readonly StringBuilder sb = new StringBuilder();
 
+        private void Awake()
+        {
+            Instance = this;
+        }
+
+        private void OnDestroy()
+        {
+            if (Instance == this) Instance = null;
+        }
+
         private void Start()
         {
-            var panel = UIFactory.CreatePanel(UIFactory.Canvas.transform, "Panel Warung", new Color(0.25f, 0.12f, 0.05f, 0.7f));
-            UIFactory.Place(panel, new Vector2(1f, 1f), new Vector2(1f, 1f), new Vector2(-30f, -30f), new Vector2(520f, 400f));
+            var panel = UIFactory.CreatePanel(UIFactory.Canvas.transform, "Panel Warung", new Color(0.2f, 0.1f, 0.05f, 0.75f));
+            UIFactory.Place(panel, new Vector2(1f, 1f), new Vector2(1f, 1f), new Vector2(-25f, -25f), new Vector2(380f, 180f));
+            panelRect = panel;
 
-            infoText = UIFactory.CreateText(panel, "Teks Warung", 21, TextAnchor.UpperLeft, Color.white);
-            UIFactory.Stretch(infoText.rectTransform, 18f, 10f, 12f, 12f);
+            infoText = UIFactory.CreateText(panel, "Teks Warung", 15, TextAnchor.UpperLeft, Color.white);
+            UIFactory.Stretch(infoText.rectTransform, 12f, 8f, 10f, 8f);
         }
 
         private void Update()
@@ -88,6 +103,17 @@ namespace Karhutla
             }
 
             infoText.text = sb.ToString();
+
+            // Responsif: Sesuaikan tinggi kotak panel secara otomatis mengikuti jumlah baris pesanan & info
+            if (panelRect != null)
+            {
+                float targetH = Mathf.Max(130f, Mathf.Ceil(infoText.preferredHeight) + 20f);
+                if (Mathf.Abs(panelRect.sizeDelta.y - targetH) > 1f)
+                {
+                    panelRect.sizeDelta = new Vector2(380f, targetH);
+                }
+                CurrentHeight = targetH;
+            }
         }
     }
 }

@@ -48,20 +48,20 @@ namespace Karhutla
         public float focusHeight = 1.4f;
 
         [Header("Mouse look (kamera mengikuti mouse / touchpad)")]
-        [Tooltip("Kamera mengikuti gerakan mouse/touchpad tanpa menekan tombol. Tombol M menyalakan/mematikan saat bermain.")]
-        public bool mouseLook = true;
+        [Tooltip("GDD Bab 9.4: Kamera top-down terkunci pada 4 arah diskrit. Fitur putar bebas dinonaktifkan secara default.")]
+        public bool mouseLook = false;
         [Tooltip("Derajat per piksel gerak mouse/touchpad. Naikkan bila terasa lambat.")]
         public float lookSensitivity = 0.12f;
         public bool invertY = false;
-        [Tooltip("Kunci dan sembunyikan kursor saat bermain (dibebaskan otomatis saat menu/dialog terbuka). Di Editor, Esc membebaskan kursor; klik jendela Game untuk mengunci lagi.")]
-        public bool lockCursor = true;
+        [Tooltip("Kunci dan sembunyikan kursor saat bermain (hanya bila mouse look aktif). Default false agar kursor bebas untuk interaksi & UI.")]
+        public bool lockCursor = false;
 
         [Header("Rotasi")]
         [Tooltip("Lama putaran 90 derajat (detik, kira-kira). Makin kecil = makin cepat.")]
         public float rotateSmoothTime = 0.2f;
         public bool allowRotation = true;
-        [Tooltip("Rotasi bebas dengan mouse kanan/tengah ditahan + geser.")]
-        public bool allowMouseDrag = true;
+        [Tooltip("GDD Bab 9.4: Rotasi bebas dengan mouse kanan/tengah dinonaktifkan default agar sudut kamera terkunci pada 4 arah.")]
+        public bool allowMouseDrag = false;
         [Tooltip("Derajat per piksel gerak mouse.")]
         public float dragSensitivity = 0.25f;
         public bool dragChangesPitch = true;
@@ -157,7 +157,7 @@ namespace Karhutla
             if (GameInput.CameraLockTogglePressed)
             {
                 mouseLook = !mouseLook;
-                Notifier.Show(mouseLook ? "Kamera mengikuti mouse/touchpad (M untuk mematikan)." : "Kamera mouse look dimatikan. Putar dengan mouse kanan + geser, atau Z/C.");
+                Notifier.Show(mouseLook ? "Kamera mouse look diaktifkan (M untuk mengunci kembali ke 4 arah)." : "Kamera terkunci 4 arah diskrit (GDD 9.4: Z / C).");
             }
 
             // Zoom (scroll)

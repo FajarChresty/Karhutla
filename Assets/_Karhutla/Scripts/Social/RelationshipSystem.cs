@@ -648,12 +648,17 @@ namespace Karhutla
             }
         }
 
-        public string BuildListText()
+        public string BuildListText(int page = 0, int pageSize = 8)
         {
             var sb = new StringBuilder();
             if (order.Count == 0) return "(belum ada warga yang dikenal)";
-            foreach (var id in order)
+
+            int start = pageSize > 0 ? Mathf.Clamp(page * pageSize, 0, order.Count) : 0;
+            int end = pageSize > 0 ? Mathf.Min(order.Count, start + pageSize) : order.Count;
+
+            for (int i = start; i < end; i++)
             {
+                var id = order[i];
                 var e = entries[id];
                 var tier = TierOf(e.Value);
                 sb.Append("<b>" + e.DisplayName + "</b>  <color=" + TierColor(tier) + ">" + DescribeTier(tier) + "</color>  " + Mathf.RoundToInt(e.Value));

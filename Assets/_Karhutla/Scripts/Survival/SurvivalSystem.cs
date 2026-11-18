@@ -170,6 +170,26 @@ namespace Karhutla
             if (item.SmokeRelief > 0f) SmokeExposure = Mathf.Clamp(SmokeExposure - item.SmokeRelief, 0f, 100f);
         }
 
+        /// <summary>Damage instan ke kesehatan (mis. dari tanah gambut ambles atau air tercemar).</summary>
+        public void TakeDamage(float amount, string cause = "")
+        {
+            if (amount <= 0f) return;
+            Health = Mathf.Clamp(Health - amount, 0f, 100f);
+            if (Health <= 0f) Collapse();
+        }
+
+        public void AddFatigue(float amount)
+        {
+            if (amount <= 0f) return;
+            Fatigue = Mathf.Clamp(Fatigue + amount, 0f, 100f);
+        }
+
+        public void RestoreThirst(float amount)
+        {
+            if (amount <= 0f) return;
+            Thirst = Mathf.Clamp(Thirst - amount, 0f, 100f);
+        }
+
         /// <summary>ASUMSI PROTOTYPE: kalau Health habis, pemain pingsan dan dibawa kembali ke titik awal.</summary>
         private void Collapse()
         {

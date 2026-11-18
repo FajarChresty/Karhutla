@@ -37,7 +37,7 @@ namespace Karhutla
             textMesh.text = text;
             textMesh.color = color;
             textMesh.fontSize = 100;
-            textMesh.characterSize = 0.06f * scale;
+            textMesh.characterSize = 0.025f * scale;
             textMesh.anchor = TextAnchor.MiddleCenter;
             textMesh.alignment = TextAlignment.Center;
         }

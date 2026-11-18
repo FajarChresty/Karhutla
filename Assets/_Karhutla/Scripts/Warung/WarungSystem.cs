@@ -559,7 +559,7 @@ namespace Karhutla
 
         private string PickOrder()
         {
-            float maskWeight = 0.3f;
+            float maskWeight = 0.2f;
             var disaster = DisasterSystem.Instance;
             if (disaster != null)
             {
@@ -571,14 +571,28 @@ namespace Karhutla
                 }
             }
 
-            float wNasi = 4f, wAir = 3f, wKopi = 2f;
-            float roll = Random.value * (wNasi + wAir + wKopi + maskWeight);
-            if (roll < wNasi) return ItemDatabase.Nasi;
-            roll -= wNasi;
-            if (roll < wAir) return ItemDatabase.Air;
-            roll -= wAir;
-            if (roll < wKopi) return ItemDatabase.Kopi;
-            return ItemDatabase.Masker;
+            // Ambil daftar hidangan yang sudah ter-unlock (GDD 5.4)
+            List<string> availableFood = null;
+            if (RecipeManager.Instance != null)
+            {
+                availableFood = RecipeManager.Instance.GetUnlockedOrderableItems();
+            }
+
+            if (availableFood == null || availableFood.Count == 0)
+            {
+                availableFood = new List<string> { ItemDatabase.Nasi, ItemDatabase.Air, ItemDatabase.Kopi };
+            }
+
+            float totalFoodWeight = availableFood.Count * 2f;
+            float roll = Random.value * (totalFoodWeight + maskWeight);
+
+            if (roll >= totalFoodWeight)
+            {
+                return ItemDatabase.Masker;
+            }
+
+            int index = Mathf.Clamp(Mathf.FloorToInt(roll / 2f), 0, availableFood.Count - 1);
+            return availableFood[index];
         }
     }
 }

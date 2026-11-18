@@ -80,8 +80,34 @@ namespace Karhutla
         private bool giftPending;
         private bool lastTalkAnnoyed;
         private BarterTrader barter;
+        private WorldLabel worldLabel;
 
         public string NpcId { get { return string.IsNullOrEmpty(npcId) ? npcName : npcId; } }
+        public Vector3 HomePosition { get { return home; } set { home = value; } }
+        public string CurrentLocationName { get; private set; } = "";
+        public string CurrentActivity { get; private set; } = "";
+
+        /// <summary>
+        /// Mengatur tujuan jadwal NPC (dipanggil NpcSchedule).
+        /// immediate = true jika waktu melompat (teleport instan).
+        /// </summary>
+        public void SetScheduleTarget(Vector3 dest, float radius, string locName, string activity, bool immediate = false)
+        {
+            home = dest;
+            wanderRadius = Mathf.Max(0.5f, radius);
+            CurrentLocationName = locName;
+            CurrentActivity = activity;
+
+            if (immediate)
+            {
+                transform.position = new Vector3(dest.x, transform.position.y, dest.z);
+                target = transform.position;
+            }
+            else
+            {
+                target = new Vector3(dest.x, transform.position.y, dest.z);
+            }
+        }
 
         private void Awake()
         {
@@ -159,7 +185,8 @@ namespace Karhutla
         public override string GetPrompt()
         {
             string rel = RelationshipSystem.Instance != null ? RelationshipSystem.Instance.Describe(NpcId) : "";
-            return "Bicara dengan " + npcName + (rel.Length > 0 ? "  (" + rel + ")" : "");
+            string act = !string.IsNullOrEmpty(CurrentActivity) ? "  [" + CurrentActivity + "]" : "";
+            return "Bicara dengan " + npcName + (rel.Length > 0 ? "  (" + rel + ")" : "") + act;
         }
 
         public override bool CanInteract() { return !talking; }
@@ -433,11 +460,48 @@ namespace Karhutla
         private void OnDialogueEnd()
         {
             talking = false;
+            CheckInvestigationInteractions();
             GiveDangerGift();
 
             if (lastTalkAnnoyed) return;
             GiveRelationshipGift();
             OfferHelp();
+        }
+
+        private void CheckInvestigationInteractions()
+        {
+            var invSys = InvestigationSystem.Instance;
+            if (invSys == null) return;
+
+            // 1. Mas Hendra: Jurnalis pembagi kwitansi suap & partner ekspos korupsi
+            if (NpcId == "Mas Hendra")
+            {
+                if (!invSys.HasClue(InvestigationSystem.ClueKwitansi))
+                {
+                    invSys.CollectClue(InvestigationSystem.ClueKwitansi);
+                    Notifier.Show("Mas Hendra: \"Ini salinan buku kas aliran suap perizinan yang berhasil kutelusuri. Simpan ini untuk bukti!\"");
+                }
+                else if (invSys.CanExpose)
+                {
+                    ModalManager.Show(
+                        "BONGKAR KORUPSI BERSAMA MAS HENDRA",
+                        "Mas Hendra: \"Bukti dokumen ilegal kita sudah lebih dari cukup (" + invSys.ClueCount + " bukti)! "
+                        + "Apakah kamu siap merilis berkas ini ke media nasional dan kejaksaan sekarang?\"",
+                        "Rilis Berkas Sekarang", "Tunda Dulu",
+                        choice => {
+                            if (choice == 0) invSys.ExposeCorruption();
+                        });
+                }
+            }
+            // 2. Pak Tejo (Mandor Perkebunan): Catatan lapangan perintah sulutan api
+            else if (NpcId == "Pak Tejo")
+            {
+                if (!invSys.HasClue(InvestigationSystem.ClueMandor))
+                {
+                    invSys.CollectClue(InvestigationSystem.ClueMandor);
+                    Notifier.Show("Kamu melihat buku catatan kerja mandor yang terjatuh dari saku Pak Tejo, berisi instruksi pembakaran!");
+                }
+            }
         }
 
         private void GiveDangerGift()

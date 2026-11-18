@@ -23,11 +23,13 @@ namespace Karhutla
         public static DisasterSystem Instance { get; private set; }
 
         [Header("Lokasi & penyebaran (NILAI SEMENTARA)")]
-        public Vector3 fireOrigin = new Vector3(0f, 0f, 55f);
+        [Tooltip("Titik awal api berada di dalam hutan utara (di dalam batas daratan).")]
+        public Vector3 fireOrigin = new Vector3(0f, 0f, 48f);
         public float initialRadius = 3f;
-        public float maxRadius = 42f;
-        [Tooltip("Berapa hari sejak api mulai sampai radius mencapai maksimum. 30 = sampai Hari 90 bila api mulai Hari 60.")]
-        public float spreadDaysToMaxRadius = 30f;
+        [Tooltip("Radius maksimum api agar kobaran api tetap berada di dalam area daratan.")]
+        public float maxRadius = 36f;
+        [Tooltip("Berapa hari sejak api mulai sampai radius mencapai maksimum. 45 = dari Hari 75 sampai akhir Bulan 4 (Hari 120).")]
+        public float spreadDaysToMaxRadius = 45f;
         [Tooltip("Jarak asap menjangkau melewati garis api.")]
         public float smokeReach = 45f;
         [Tooltip("Lama pohon menyala (menit simulasi) sebelum hangus.")]

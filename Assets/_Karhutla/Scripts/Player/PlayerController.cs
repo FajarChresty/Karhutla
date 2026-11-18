@@ -23,6 +23,10 @@ namespace Karhutla
         [Header("Referensi (opsional, otomatis memakai Camera.main)")]
         public Transform cameraTransform;
 
+        [Header("Pengaruh Lingkungan")]
+        [Tooltip("Pengali kecepatan akibat bahaya lingkungan seperti tanah gambut ambles (GDD Bab 8.4). Di-reset tiap frame.")]
+        public float EnvironmentalSpeedMultiplier { get; set; } = 1f;
+
         public bool IsSprinting { get; private set; }
         public bool IsMoving => horizontalVelocity.sqrMagnitude > 0.25f;
 
@@ -61,6 +65,8 @@ namespace Karhutla
 
             float speed = IsSprinting ? sprintSpeed : walkSpeed;
             if (survival != null) speed *= survival.SpeedMultiplier;
+            speed *= Mathf.Clamp(EnvironmentalSpeedMultiplier, 0.1f, 2f);
+            EnvironmentalSpeedMultiplier = 1f; // reset tiap frame, bahaya aktif akan mengesetnya lagi selagi pemain di dalam zona
 
             Vector3 targetVelocity = moveDir * speed;
             horizontalVelocity = Vector3.MoveTowards(horizontalVelocity, targetVelocity, acceleration * Time.deltaTime);

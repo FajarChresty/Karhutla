@@ -59,17 +59,17 @@ namespace Karhutla
         {
             Transform root = UIFactory.Canvas.transform;
 
-            // Tengah atas, tepat di bawah banner bahaya (banner: 100 px tinggi, 30 px dari atas).
-            var panel = UIFactory.CreatePanel(root, "Panel Jam", new Color(0f, 0f, 0f, 0.55f));
-            UIFactory.Place(panel, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, -140f), new Vector2(280f, 96f));
+            // Tengah atas, tepat di bawah banner bahaya (banner: 80 px tinggi, 25 px dari atas).
+            var panel = UIFactory.CreatePanel(root, "Panel Jam", new Color(0f, 0f, 0f, 0.6f));
+            UIFactory.Place(panel, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, -115f), new Vector2(220f, 75f));
             panelImage = panel.GetComponent<Image>();
 
-            clockText = UIFactory.CreateText(panel, "Teks Jam", 46, TextAnchor.UpperCenter, Color.white);
+            clockText = UIFactory.CreateText(panel, "Teks Jam", 34, TextAnchor.UpperCenter, Color.white);
             clockText.fontStyle = FontStyle.Bold;
-            UIFactory.Stretch(clockText.rectTransform, 8f, 0f, 8f, 4f);
+            UIFactory.Stretch(clockText.rectTransform, 6f, 0f, 6f, 2f);
 
-            labelText = UIFactory.CreateText(panel, "Teks Waktu", 24, TextAnchor.LowerCenter, Color.white);
-            UIFactory.Stretch(labelText.rectTransform, 8f, 6f, 8f, 0f);
+            labelText = UIFactory.CreateText(panel, "Teks Waktu", 18, TextAnchor.LowerCenter, Color.white);
+            UIFactory.Stretch(labelText.rectTransform, 6f, 4f, 6f, 0f);
         }
 
         private void Update()

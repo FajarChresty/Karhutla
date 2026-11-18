@@ -42,6 +42,7 @@ namespace Karhutla
         public static bool DiscardPressed => Down(Key.G);
         public static bool ClearPressed => Down(Key.Backspace);
         public static bool RelationshipTogglePressed => Down(Key.K);
+        public static bool RelationshipTabPressed => Down(Key.Tab) || Down(Key.T);
         public static bool ReportPressed => Down(Key.L);
 
         // Kamera: scroll untuk zoom, tombol mouse kanan/tengah ditahan + geser untuk memutar bebas.
@@ -71,6 +72,7 @@ namespace Karhutla
         public static bool DebugTimeUnitPressed => Down(Key.T);
         public static bool DebugNextSectionPressed => Down(Key.Y);
         public static bool DebugNextDayPressed => Down(Key.U);
+        public static bool DebugPlotSkipPressed => Down(Key.P);
 
         // Barter: ubah jumlah barang yang diminta. Debug hubungan sosial: ] naik, [ turun, \ reset semua.
         public static bool MenuUpPressed => Down(Key.UpArrow);
@@ -112,6 +114,7 @@ namespace Karhutla
         public static bool DiscardPressed => Input.GetKeyDown(KeyCode.G);
         public static bool ClearPressed => Input.GetKeyDown(KeyCode.Backspace);
         public static bool RelationshipTogglePressed => Input.GetKeyDown(KeyCode.K);
+        public static bool RelationshipTabPressed => Input.GetKeyDown(KeyCode.Tab) || Input.GetKeyDown(KeyCode.T);
         public static bool ReportPressed => Input.GetKeyDown(KeyCode.L);
 
         // Kamera: scroll untuk zoom, tombol mouse kanan/tengah ditahan + geser untuk memutar bebas.
@@ -124,6 +127,7 @@ namespace Karhutla
         public static bool DebugTimeUnitPressed => Input.GetKeyDown(KeyCode.T);
         public static bool DebugNextSectionPressed => Input.GetKeyDown(KeyCode.Y);
         public static bool DebugNextDayPressed => Input.GetKeyDown(KeyCode.U);
+        public static bool DebugPlotSkipPressed => Input.GetKeyDown(KeyCode.P);
 
         // Barter: ubah jumlah barang yang diminta. Debug hubungan sosial: ] naik, [ turun, \ reset semua.
         public static bool MenuUpPressed => Input.GetKeyDown(KeyCode.UpArrow);

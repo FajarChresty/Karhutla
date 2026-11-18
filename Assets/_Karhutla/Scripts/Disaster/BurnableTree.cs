@@ -8,8 +8,9 @@ namespace Karhutla
     /// <summary>
     /// Pohon dummy yang bisa terbakar. DisasterSystem yang memutuskan kapan pohon menyala.
     /// Visual: sehat (hijau) -> terbakar (oranye + bola api berkedip) -> hangus (hitam).
+    /// Dapat disiram dan dipadamkan langsung oleh pemain menggunakan air (GDD 3.4).
     /// </summary>
-    public class BurnableTree : MonoBehaviour
+    public class BurnableTree : InteractableBase
     {
         public static readonly List<BurnableTree> All = new List<BurnableTree>();
 
@@ -24,6 +25,7 @@ namespace Karhutla
 
         private void Awake()
         {
+            interactRange = 2.8f;
             renderers = GetComponentsInChildren<Renderer>();
             originalMaterials = new Material[renderers.Length];
             for (int i = 0; i < renderers.Length; i++) originalMaterials[i] = renderers[i] != null ? renderers[i].sharedMaterial : null;
@@ -32,6 +34,47 @@ namespace Karhutla
 
         private void OnEnable() { All.Add(this); }
         private void OnDisable() { All.Remove(this); }
+
+        public override string GetPrompt()
+        {
+            if (State != TreeState.Burning) return null;
+            var inv = Inventory.Instance;
+            int water = inv != null ? inv.CountFresh(ItemDatabase.Air) : 0;
+            return "Siram & Padamkan Api Pohon (Punya " + water + " Air)";
+        }
+
+        public override void Interact()
+        {
+            if (State != TreeState.Burning) return;
+
+            var inv = Inventory.Instance;
+            if (inv == null || inv.CountFresh(ItemDatabase.Air) <= 0)
+            {
+                Notifier.Show("Kamu membutuhkan Air Mineral untuk menyiram dan memadamkan api ini!");
+                return;
+            }
+
+            inv.Remove(ItemDatabase.Air, 1);
+            Extinguish();
+
+            if (FirefightingMission.Instance != null)
+            {
+                FirefightingMission.Instance.RecordTreeExtinguished();
+            }
+            Notifier.Show("Kamu menyiram air dan memadamkan kobaran api pohon ini! Satu pohon terselamatkan.");
+        }
+
+        public void Extinguish()
+        {
+            if (State != TreeState.Burning) return;
+            State = TreeState.Healthy;
+            if (flame != null) Destroy(flame.gameObject);
+            flame = null;
+            for (int i = 0; i < renderers.Length; i++)
+            {
+                if (renderers[i] != null && originalMaterials[i] != null) renderers[i].sharedMaterial = originalMaterials[i];
+            }
+        }
 
         public void Ignite(Material burningMaterial, Material flameMaterial, float durationMinutes)
         {

@@ -17,18 +17,19 @@ namespace Karhutla
 
         private static readonly string[] Catalog =
         {
-            ItemDatabase.Beras, ItemDatabase.Sayur, ItemDatabase.BubukKopi, ItemDatabase.Air, ItemDatabase.Masker
+            ItemDatabase.Beras, ItemDatabase.Sayur, ItemDatabase.BubukKopi, ItemDatabase.Teh,
+            ItemDatabase.Telur, ItemDatabase.Pisang, ItemDatabase.Mie, ItemDatabase.Air, ItemDatabase.Masker
         };
 
         public bool IsOpen { get; private set; }
-        public string Title { get { return quickMode ? "PASAR  (beli cepat 1 item, tanpa memakai sesi)" : "PASAR  (belanja)"; } }
+        public string Title { get { return quickMode ? "PASAR  (beli cepat 1 item, tanpa memakai sesi)" : "PASAR  (belanja sembako & bahan)"; } }
         public string Body { get { return BuildBody(); } }
         public string Footer
         {
             get
             {
-                return quickMode ? "[1-5] beli 1 item lalu selesai   [Esc/Q] batal"
-                                 : "[1-5] beli 1   [Shift+1-5] beli 5   [Esc/Q] selesai belanja";
+                return quickMode ? "[1-9] beli 1 item lalu selesai   [Esc/Q] batal"
+                                 : "[1-9] beli 1   [Shift+1-9] beli 5   [Esc/Q] selesai belanja";
             }
         }
 
