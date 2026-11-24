@@ -86,6 +86,8 @@ namespace Karhutla
         public Vector3 HomePosition { get { return home; } set { home = value; } }
         public string CurrentLocationName { get; private set; } = "";
         public string CurrentActivity { get; private set; } = "";
+        /// <summary>True selama NPC sedang berdialog dengan pemain (dibaca sistem animasi).</summary>
+        public bool IsTalking => talking;
 
         /// <summary>
         /// Mengatur tujuan jadwal NPC (dipanggil NpcSchedule).
