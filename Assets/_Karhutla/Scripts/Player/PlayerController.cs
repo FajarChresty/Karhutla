@@ -45,11 +45,21 @@ namespace Karhutla
 
         /// <summary>
         /// Memastikan karakter 2D (character.prefab) dan animasinya terpasang otomatis
-        /// pada Player bahkan tanpa perlu men-generate ulang scene.
+        /// pada Player dengan hierarki yang tepat (CharacterVisual -> character) agar clip animasi berjalan.
         /// </summary>
         public void EnsureCharacterVisual()
         {
-            if (transform.Find("CharacterVisual") != null) return;
+            var existingVisual = transform.Find("CharacterVisual");
+            if (existingVisual != null)
+            {
+                // Cek apakah struktur sudah valid (memiliki child "character" dan Animator)
+                if (existingVisual.Find("character") != null && existingVisual.GetComponent<Animator>() != null)
+                {
+                    return;
+                }
+                // Jika struktur tidak valid (misal dari scene/build lama), bersihkan agar dibuat ulang dengan benar
+                DestroyImmediate(existingVisual.gameObject);
+            }
 
             GameObject prefab = Resources.Load<GameObject>("character");
 #if UNITY_EDITOR
@@ -60,9 +70,14 @@ namespace Karhutla
 #endif
             if (prefab != null)
             {
-                var charInstance = Instantiate(prefab, transform);
-                charInstance.name = "CharacterVisual";
-                charInstance.transform.localPosition = new Vector3(0f, -1.0f, 0f);
+                var visualGo = new GameObject("CharacterVisual");
+                visualGo.transform.SetParent(transform, false);
+                visualGo.transform.localPosition = new Vector3(0f, -0.93f, 0f);
+                visualGo.transform.localRotation = Quaternion.identity;
+
+                var charInstance = Instantiate(prefab, visualGo.transform);
+                charInstance.name = "character"; // Wajib "character" karena track animasi memiliki jalur "character/Front", dsb.
+                charInstance.transform.localPosition = new Vector3(-2.8256f, 0f, 0f);
                 charInstance.transform.localRotation = Quaternion.identity;
 
                 // Sembunyikan mesh kapsul dummy dan penunjuk arah
@@ -71,9 +86,9 @@ namespace Karhutla
                 var nose = transform.Find("Penunjuk Arah");
                 if (nose != null) nose.gameObject.SetActive(false);
 
-                // Pasang controller animasi
-                var anim = charInstance.GetComponent<Animator>();
-                if (anim == null) anim = charInstance.AddComponent<Animator>();
+                // Pasang controller animasi pada CharacterVisual
+                var anim = visualGo.GetComponent<Animator>();
+                if (anim == null) anim = visualGo.AddComponent<Animator>();
                 if (anim.runtimeAnimatorController == null)
                 {
                     var animCtrl = Resources.Load<RuntimeAnimatorController>("Player");
@@ -89,7 +104,7 @@ namespace Karhutla
                 // Pasang komponen PlayerAnimator untuk menangani 4 arah hadap
                 var pAnim = GetComponent<PlayerAnimator>();
                 if (pAnim == null) pAnim = gameObject.AddComponent<PlayerAnimator>();
-                pAnim.visual = charInstance.transform;
+                pAnim.visual = visualGo.transform;
                 pAnim.controller = this;
             }
         }

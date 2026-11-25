@@ -336,21 +336,25 @@ namespace Karhutla.EditorTools
             var animController = AssetDatabase.LoadAssetAtPath<RuntimeAnimatorController>("Assets/Animations/Player/Player.controller");
             if (charPrefab != null)
             {
-                var charInstance = (GameObject)PrefabUtility.InstantiatePrefab(charPrefab, player.transform);
-                charInstance.name = "CharacterVisual";
-                charInstance.transform.localPosition = new Vector3(0f, -1.0f, 0f);
+                var visualGo = new GameObject("CharacterVisual");
+                visualGo.transform.SetParent(player.transform, false);
+                visualGo.transform.localPosition = new Vector3(0f, -0.93f, 0f);
+                visualGo.transform.localRotation = Quaternion.identity;
+
+                var charInstance = (GameObject)PrefabUtility.InstantiatePrefab(charPrefab, visualGo.transform);
+                charInstance.name = "character"; // Wajib "character" karena track animasi memiliki jalur "character/Front", dsb.
+                charInstance.transform.localPosition = new Vector3(-2.8256f, 0f, 0f);
                 charInstance.transform.localRotation = Quaternion.identity;
 
                 // Sembunyikan kapsul dummy jika karakter 2D aktif
                 var mr = player.GetComponent<MeshRenderer>();
                 if (mr != null) mr.enabled = false;
 
-                var anim = charInstance.GetComponent<Animator>();
-                if (anim == null) anim = charInstance.AddComponent<Animator>();
+                var anim = visualGo.AddComponent<Animator>();
                 if (animController != null) anim.runtimeAnimatorController = animController;
 
                 var pAnim = player.AddComponent<PlayerAnimator>();
-                pAnim.visual = charInstance.transform;
+                pAnim.visual = visualGo.transform;
                 pAnim.controller = playerController;
             }
             else
