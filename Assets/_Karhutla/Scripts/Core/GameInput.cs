@@ -73,6 +73,11 @@ namespace Karhutla
         public static bool DebugNextSectionPressed => Down(Key.Y);
         public static bool DebugNextDayPressed => Down(Key.U);
         public static bool DebugPlotSkipPressed => Down(Key.P);
+        public static bool DebugEventDay40Pressed => Down(Key.F7);
+        public static bool DebugEventDay75Pressed => Down(Key.F8);
+        public static bool CategoryNextPressed => Down(Key.Tab) || Down(Key.D) || Down(Key.RightArrow);
+        public static bool CategoryPrevPressed => Down(Key.A) || Down(Key.LeftArrow);
+        public static bool EnterPressed => Down(Key.Enter) || Down(Key.NumpadEnter);
 
         // Barter: ubah jumlah barang yang diminta. Debug hubungan sosial: ] naik, [ turun, \ reset semua.
         public static bool MenuUpPressed => Down(Key.UpArrow);
@@ -128,6 +133,11 @@ namespace Karhutla
         public static bool DebugNextSectionPressed => Input.GetKeyDown(KeyCode.Y);
         public static bool DebugNextDayPressed => Input.GetKeyDown(KeyCode.U);
         public static bool DebugPlotSkipPressed => Input.GetKeyDown(KeyCode.P);
+        public static bool DebugEventDay40Pressed => Input.GetKeyDown(KeyCode.F7);
+        public static bool DebugEventDay75Pressed => Input.GetKeyDown(KeyCode.F8);
+        public static bool CategoryNextPressed => Input.GetKeyDown(KeyCode.Tab) || Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow);
+        public static bool CategoryPrevPressed => Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow);
+        public static bool EnterPressed => Input.GetKeyDown(KeyCode.Return);
 
         // Barter: ubah jumlah barang yang diminta. Debug hubungan sosial: ] naik, [ turun, \ reset semua.
         public static bool MenuUpPressed => Input.GetKeyDown(KeyCode.UpArrow);

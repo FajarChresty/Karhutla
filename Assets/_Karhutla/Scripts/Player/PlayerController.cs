@@ -40,6 +40,58 @@ namespace Karhutla
         {
             Instance = this;
             controller = GetComponent<CharacterController>();
+            EnsureCharacterVisual();
+        }
+
+        /// <summary>
+        /// Memastikan karakter 2D (character.prefab) dan animasinya terpasang otomatis
+        /// pada Player bahkan tanpa perlu men-generate ulang scene.
+        /// </summary>
+        public void EnsureCharacterVisual()
+        {
+            if (transform.Find("CharacterVisual") != null) return;
+
+            GameObject prefab = Resources.Load<GameObject>("character");
+#if UNITY_EDITOR
+            if (prefab == null)
+            {
+                prefab = UnityEditor.AssetDatabase.LoadAssetAtPath<GameObject>("Assets/_Karhutla/Prefabs/character.prefab");
+            }
+#endif
+            if (prefab != null)
+            {
+                var charInstance = Instantiate(prefab, transform);
+                charInstance.name = "CharacterVisual";
+                charInstance.transform.localPosition = new Vector3(0f, -1.0f, 0f);
+                charInstance.transform.localRotation = Quaternion.identity;
+
+                // Sembunyikan mesh kapsul dummy dan penunjuk arah
+                var mr = GetComponent<MeshRenderer>();
+                if (mr != null) mr.enabled = false;
+                var nose = transform.Find("Penunjuk Arah");
+                if (nose != null) nose.gameObject.SetActive(false);
+
+                // Pasang controller animasi
+                var anim = charInstance.GetComponent<Animator>();
+                if (anim == null) anim = charInstance.AddComponent<Animator>();
+                if (anim.runtimeAnimatorController == null)
+                {
+                    var animCtrl = Resources.Load<RuntimeAnimatorController>("Player");
+#if UNITY_EDITOR
+                    if (animCtrl == null)
+                    {
+                        animCtrl = UnityEditor.AssetDatabase.LoadAssetAtPath<RuntimeAnimatorController>("Assets/Animations/Player/Player.controller");
+                    }
+#endif
+                    if (animCtrl != null) anim.runtimeAnimatorController = animCtrl;
+                }
+
+                // Pasang komponen PlayerAnimator untuk menangani 4 arah hadap
+                var pAnim = GetComponent<PlayerAnimator>();
+                if (pAnim == null) pAnim = gameObject.AddComponent<PlayerAnimator>();
+                pAnim.visual = charInstance.transform;
+                pAnim.controller = this;
+            }
         }
 
         private void OnDestroy()

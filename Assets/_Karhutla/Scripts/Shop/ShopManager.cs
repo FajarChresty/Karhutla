@@ -113,12 +113,12 @@ namespace Karhutla
             if (GameInput.CancelPressed) { Close(); return; }
 
             // Navigasi Kategori dengan Tab atau tombol A / D / Panah
-            if (Input.GetKeyDown(KeyCode.Tab) || Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow))
+            if (GameInput.CategoryNextPressed)
             {
                 currentCategory = (currentCategory + 1) % Categories.Length;
                 return;
             }
-            if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow))
+            if (GameInput.CategoryPrevPressed)
             {
                 currentCategory = (currentCategory - 1 + Categories.Length) % Categories.Length;
                 return;

@@ -8,7 +8,6 @@ namespace Karhutla
     /// dipilih dari arah gerak relatif terhadap kamera. Jadi tetap benar walau kamera diputar dengan Z / C.
     /// Parameter Animator: Facing (int), IsMoving (bool), MoveSpeed (float), lihat Animations/Player/Player.controller.
     /// </summary>
-    [RequireComponent(typeof(Animator))]
     public class PlayerAnimator : MonoBehaviour
     {
         // Urutan harus sama dengan nilai parameter "Facing" di controller.
@@ -49,6 +48,8 @@ namespace Karhutla
         private void Update()
         {
             if (controller == null) return;
+            if (animator == null && visual != null) animator = visual.GetComponent<Animator>();
+            if (animator == null) return;
 
             Vector3 velocity = controller.HorizontalVelocity;
             bool moving = controller.IsMoving;

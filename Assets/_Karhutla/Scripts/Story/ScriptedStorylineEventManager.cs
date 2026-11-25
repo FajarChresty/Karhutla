@@ -100,19 +100,19 @@ namespace Karhutla
         private void Update()
         {
             // Debug Shortcut untuk review atasan / desainer
-            if (Input.GetKeyDown(KeyCode.F7))
+            if (GameInput.DebugEventDay40Pressed)
             {
                 TriggerCorruptionIncidentEvent();
             }
-            else if (Input.GetKeyDown(KeyCode.F8))
+            else if (GameInput.DebugEventDay75Pressed)
             {
                 TriggerForestFireOutbreakEvent();
             }
 
             if (!IsCinematicPlaying) return;
 
-            // Tekan E atau Spasi untuk lanjut percakapan sinematik
-            if (GameInput.AdvanceDialoguePressed || GameInput.ConfirmPressed || Input.GetKeyDown(KeyCode.Return))
+            // Tekan E, Spasi, atau Enter untuk lanjut percakapan sinematik
+            if (GameInput.AdvanceDialoguePressed || GameInput.ConfirmPressed || GameInput.EnterPressed)
             {
                 AdvanceStep();
             }
