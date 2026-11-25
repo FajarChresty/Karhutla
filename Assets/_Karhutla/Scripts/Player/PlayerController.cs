@@ -29,6 +29,8 @@ namespace Karhutla
 
         public bool IsSprinting { get; private set; }
         public bool IsMoving => horizontalVelocity.sqrMagnitude > 0.25f;
+        /// <summary>Kecepatan gerak horizontal saat ini (dibaca PlayerAnimator).</summary>
+        public Vector3 HorizontalVelocity => horizontalVelocity;
 
         private CharacterController controller;
         private Vector3 horizontalVelocity;
