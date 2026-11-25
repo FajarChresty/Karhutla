@@ -330,7 +330,33 @@ namespace Karhutla.EditorTools
             cc.skinWidth = 0.05f;
             var playerController = player.AddComponent<PlayerController>();
             player.AddComponent<Interactor>();
-            Prim(PrimitiveType.Cube, "Penunjuk Arah", player.transform, new Vector3(0f, 0.5f, 0.55f), new Vector3(0.4f, 0.25f, 0.4f), noseMat, false);
+
+            // Pasang Prefab Karakter 2D & Animator bila tersedia
+            var charPrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/_Karhutla/Prefabs/character.prefab");
+            var animController = AssetDatabase.LoadAssetAtPath<RuntimeAnimatorController>("Assets/Animations/Player/Player.controller");
+            if (charPrefab != null)
+            {
+                var charInstance = (GameObject)PrefabUtility.InstantiatePrefab(charPrefab, player.transform);
+                charInstance.name = "CharacterVisual";
+                charInstance.transform.localPosition = new Vector3(0f, -1.0f, 0f);
+                charInstance.transform.localRotation = Quaternion.identity;
+
+                // Sembunyikan kapsul dummy jika karakter 2D aktif
+                var mr = player.GetComponent<MeshRenderer>();
+                if (mr != null) mr.enabled = false;
+
+                var anim = charInstance.GetComponent<Animator>();
+                if (anim == null) anim = charInstance.AddComponent<Animator>();
+                if (animController != null) anim.runtimeAnimatorController = animController;
+
+                var pAnim = player.AddComponent<PlayerAnimator>();
+                pAnim.visual = charInstance.transform;
+                pAnim.controller = playerController;
+            }
+            else
+            {
+                Prim(PrimitiveType.Cube, "Penunjuk Arah", player.transform, new Vector3(0f, 0.5f, 0.55f), new Vector3(0.4f, 0.25f, 0.4f), noseMat, false);
+            }
 
             var camGo = new GameObject("Main Camera");
             camGo.tag = "MainCamera";

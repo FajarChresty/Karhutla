@@ -32,9 +32,18 @@ namespace Karhutla
 
         private void Awake()
         {
-            animator = GetComponent<Animator>();
             if (controller == null) controller = GetComponent<PlayerController>();
-            if (visual == null && transform.childCount > 0) visual = transform.GetChild(0);
+            if (visual == null)
+            {
+                var child = transform.Find("CharacterVisual");
+                if (child != null) visual = child;
+                else if (transform.childCount > 0) visual = transform.GetChild(0);
+            }
+            if (animator == null)
+            {
+                animator = GetComponent<Animator>();
+                if (animator == null && visual != null) animator = visual.GetComponent<Animator>();
+            }
         }
 
         private void Update()
