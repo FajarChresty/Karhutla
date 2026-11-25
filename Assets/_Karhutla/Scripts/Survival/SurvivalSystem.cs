@@ -17,23 +17,26 @@ namespace Karhutla
     {
         public static SurvivalSystem Instance { get; private set; }
 
-        [Header("Laju per jam game")]
-        public float hungerPerHour = 5f;
-        public float thirstPerHour = 8f;
-        public float fatiguePerHour = 4f;
+        [Header("Laju per jam game (Dikalibrasi agar berimbang & tidak terlalu drastis)")]
+        [Tooltip("Laju rasa lapar per jam game. 2.5 = 20 poin per 1 sesi 8 jam.")]
+        public float hungerPerHour = 2.5f;
+        [Tooltip("Laju rasa haus per jam game. 3.75 = 30 poin per 1 sesi 8 jam.")]
+        public float thirstPerHour = 3.75f;
+        [Tooltip("Laju kelelahan per jam game. 2.0 = 16 poin per 1 sesi 8 jam.")]
+        public float fatiguePerHour = 2.0f;
         public float nightFatigueMultiplier = 1.5f;
         [Tooltip("Tambahan Fatigue per detik nyata saat berlari.")]
-        public float sprintFatiguePerSecond = 0.6f;
+        public float sprintFatiguePerSecond = 0.35f;
 
         [Header("Asap")]
         [Tooltip("Seberapa cepat Smoke Exposure mengejar nilai udara sekitar (per menit game).")]
-        public float smokeFollowRate = 0.06f;
+        public float smokeFollowRate = 0.045f;
         [Tooltip("Masker mengalikan paparan asap dengan nilai ini (0.3 = menyaring 70%).")]
         public float maskFilterFactor = 0.3f;
 
         [Header("Kesehatan")]
         public float smokeDamageThreshold = 60f;
-        public float smokeDamageMax = 0.35f;
+        public float smokeDamageMax = 0.25f;
 
         public float Hunger { get; private set; }
         public float Thirst { get; private set; }

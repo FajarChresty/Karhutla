@@ -31,26 +31,26 @@ namespace Karhutla
         public Transform spawnPoint;
         public Material customerMaterial;
 
-        [Header("Sesi warung (NILAI SEMENTARA, detik nyata)")]
-        public float sessionDurationSeconds = 150f;
-        public float baseSpawnInterval = 12f;
+        [Header("Sesi warung (Dikalibrasi agar pacing pas & adil)")]
+        public float sessionDurationSeconds = 160f;
+        public float baseSpawnInterval = 14f;
         [Tooltip("Batas pelanggan per sesi. 0 = tanpa batas (dibatasi jumlah meja).")]
         public int maxCustomersPerSession = 0;
-        [Tooltip("Kesabaran menunggu pesanan dicatat.")]
-        public float orderPatience = 25f;
-        [Tooltip("Kesabaran menunggu makanan diantar setelah dicatat.")]
-        public float foodPatience = 50f;
-        public float eatSeconds = 4f;
+        [Tooltip("Kesabaran menunggu pesanan dicatat (dikalibrasi agar pemain punya waktu berjalan).")]
+        public float orderPatience = 38f;
+        [Tooltip("Kesabaran menunggu makanan diantar setelah dicatat (dikalibrasi dengan waktu masak).")]
+        public float foodPatience = 65f;
+        public float eatSeconds = 5f;
         [Tooltip("GDD 4.2: warung normalnya beroperasi pada Pagi. Matikan hanya untuk eksperimen/debug.")]
         public bool onlyOpenInMorning = true;
         [Tooltip("Menutup warung lebih awal tetap memakai sesi waktu? (GDD belum menjelaskan)")]
         public bool earlyCloseSpendsTime = true;
 
-        [Header("Kepuasan pelanggan (NILAI SEMENTARA)")]
+        [Header("Kepuasan pelanggan (Dikalibrasi)")]
         [Tooltip("Skor kepuasan terendah untuk pelanggan yang tetap dilayani (dilayani di detik-detik terakhir kesabaran).")]
-        [Range(0f, 100f)] public float worstServedSatisfaction = 40f;
-        [Tooltip("Seberapa besar kepuasan keseluruhan memengaruhi jumlah pelanggan. 0 = tidak ada pengaruh (default, GDD belum menentukan).")]
-        [Range(0f, 1f)] public float demandInfluence = 0f;
+        [Range(0f, 100f)] public float worstServedSatisfaction = 45f;
+        [Tooltip("Seberapa besar kepuasan keseluruhan memengaruhi jumlah pelanggan (0.25 = kepuasan tinggi meningkatkan kedatangan).")]
+        [Range(0f, 1f)] public float demandInfluence = 0.25f;
 
         public bool IsOpen { get; private set; }
         public float SessionTimeLeft { get; private set; }

@@ -99,6 +99,34 @@ namespace Karhutla
         private int skipLookFrames;
         private float fastRotateTimer;
 
+        private Transform originalTarget;
+        private bool isCutsceneOverridden;
+
+        public void SetCutsceneFocus(Transform cutsceneTarget, float targetYawAngle, float targetPitchAngle, float targetDist, float smoothTime = 0.5f)
+        {
+            if (!isCutsceneOverridden) originalTarget = target;
+            isCutsceneOverridden = true;
+            target = cutsceneTarget;
+            targetYaw = targetYawAngle;
+            targetPitch = targetPitchAngle;
+            targetDistance = targetDist;
+            followSmoothTime = smoothTime;
+            rotateSmoothTime = smoothTime;
+        }
+
+        public void ClearCutsceneFocus()
+        {
+            if (isCutsceneOverridden && originalTarget != null)
+            {
+                target = originalTarget;
+            }
+            isCutsceneOverridden = false;
+            followSmoothTime = 0.05f;
+            rotateSmoothTime = 0.2f;
+            targetPitch = pitch;
+            targetDistance = initialDistance;
+        }
+
         private void Awake() { Instance = this; }
         private void OnDestroy()
         {

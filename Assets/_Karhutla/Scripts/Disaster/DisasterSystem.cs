@@ -72,6 +72,10 @@ namespace Karhutla
             Instance = this;
             timeline = FindFirstObjectByType<DisasterTimeline>();
             if (timeline == null) timeline = gameObject.AddComponent<DisasterTimeline>();
+            if (FindFirstObjectByType<DisasterVisualEffects>() == null)
+            {
+                gameObject.AddComponent<DisasterVisualEffects>();
+            }
         }
 
         private void Start()

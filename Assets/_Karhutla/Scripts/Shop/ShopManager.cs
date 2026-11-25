@@ -15,21 +15,45 @@ namespace Karhutla
     {
         public static ShopManager Instance { get; private set; }
 
-        private static readonly string[] Catalog =
+        private static readonly string[][] Categories = new string[][]
         {
-            ItemDatabase.Beras, ItemDatabase.Sayur, ItemDatabase.BubukKopi, ItemDatabase.Teh,
-            ItemDatabase.Telur, ItemDatabase.Pisang, ItemDatabase.Mie, ItemDatabase.Air, ItemDatabase.Masker
+            // Kategori 1: Sembako & Bahan Pokok (GDD 5.4)
+            new string[]
+            {
+                ItemDatabase.Beras, ItemDatabase.Sayur, ItemDatabase.Tepung, ItemDatabase.Telur,
+                ItemDatabase.Mie, ItemDatabase.Pisang, ItemDatabase.KacangHijau, ItemDatabase.Gula
+            },
+            // Kategori 2: Lauk, Minuman & Rempah (GDD 5.4)
+            new string[]
+            {
+                ItemDatabase.BubukKopi, ItemDatabase.Teh, ItemDatabase.Jeruk, ItemDatabase.Ikan,
+                ItemDatabase.Ayam, ItemDatabase.Jahe, ItemDatabase.Air
+            },
+            // Kategori 3: Kebutuhan Bencana & Obat Darurat (GDD 7 & 8)
+            new string[]
+            {
+                ItemDatabase.Masker, ItemDatabase.Obat, ItemDatabase.Oralit
+            }
         };
 
+        private static readonly string[] CategoryNames =
+        {
+            "Sembako & Bahan Pokok",
+            "Lauk, Minuman & Rempah",
+            "Kebutuhan Bencana & Medis"
+        };
+
+        private int currentCategory = 0;
+
         public bool IsOpen { get; private set; }
-        public string Title { get { return quickMode ? "PASAR  (beli cepat 1 item, tanpa memakai sesi)" : "PASAR  (belanja sembako & bahan)"; } }
+        public string Title { get { return quickMode ? "PASAR  (beli cepat 1 item, tanpa memakai sesi)" : "PASAR DESA  (belanja sembako, lauk & persediaan)"; } }
         public string Body { get { return BuildBody(); } }
         public string Footer
         {
             get
             {
-                return quickMode ? "[1-9] beli 1 item lalu selesai   [Esc/Q] batal"
-                                 : "[1-9] beli 1   [Shift+1-9] beli 5   [Esc/Q] selesai belanja";
+                return quickMode ? "[1-8] beli 1 item lalu selesai   [Tab / A / D] ganti kategori   [Esc/Q] batal"
+                                 : "[1-8] beli 1   [Shift+1-8] beli 5   [Tab / A / D] ganti kategori   [Esc/Q] selesai";
             }
         }
 
@@ -88,11 +112,24 @@ namespace Karhutla
 
             if (GameInput.CancelPressed) { Close(); return; }
 
-            for (int n = 1; n <= Catalog.Length && n <= 9; n++)
+            // Navigasi Kategori dengan Tab atau tombol A / D / Panah
+            if (Input.GetKeyDown(KeyCode.Tab) || Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow))
+            {
+                currentCategory = (currentCategory + 1) % Categories.Length;
+                return;
+            }
+            if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow))
+            {
+                currentCategory = (currentCategory - 1 + Categories.Length) % Categories.Length;
+                return;
+            }
+
+            var currentList = Categories[currentCategory];
+            for (int n = 1; n <= currentList.Length && n <= 8; n++)
             {
                 if (!GameInput.NumberPressed(n)) continue;
                 int qty = (!quickMode && GameInput.SprintHeld) ? 5 : 1;
-                bool bought = Buy(Catalog[n - 1], qty);
+                bool bought = Buy(currentList[n - 1], qty);
                 if (bought && quickMode) Close();
                 break;
             }
@@ -135,14 +172,33 @@ namespace Karhutla
             if (inv == null) return "";
 
             var sb = new StringBuilder();
-            sb.Append("Uang: <b>" + TextFormat.Rupiah(inv.Money) + "</b>     Berat bawaan: " + inv.CurrentWeight.ToString("0.#") + " / " + inv.MaxWeight.ToString("0.#") + " kg\n\n");
-            for (int i = 0; i < Catalog.Length; i++)
+            sb.Append("Uang: <b>" + TextFormat.Rupiah(inv.Money) + "</b>     Beban bawaan: " + inv.CurrentWeight.ToString("0.#") + " / " + inv.MaxWeight.ToString("0.#") + " kg\n");
+
+            // Baris Navigasi Tab Kategori
+            sb.Append("Kategori: ");
+            for (int c = 0; c < Categories.Length; c++)
             {
-                var def = ItemDatabase.Get(Catalog[i]);
-                sb.Append("[" + (i + 1) + "] " + def.DisplayName + "   " + TextFormat.Rupiah(def.Price) + "   " + def.Weight.ToString("0.##") + " kg");
-                sb.Append("   (punya " + inv.Count(def.Id) + ")\n");
+                if (c == currentCategory)
+                    sb.Append("<color=#FFD166><b>[ " + CategoryNames[c] + " ]</b></color>  ");
+                else
+                    sb.Append("<color=#A0A0A0>" + CategoryNames[c] + "</color>  ");
             }
-            sb.Append("\n<size=22>Bahan mentah cepat basi bila tidak disimpan di kulkas. Barter dengan warga hanya saat masa bencana.</size>");
+            sb.Append("\n\n");
+
+            var currentList = Categories[currentCategory];
+            for (int i = 0; i < currentList.Length; i++)
+            {
+                var def = ItemDatabase.Get(currentList[i]);
+                if (def == null) continue;
+                sb.Append("[" + (i + 1) + "] " + def.DisplayName + "   <b>" + TextFormat.Rupiah(def.Price) + "</b>   " + def.Weight.ToString("0.##") + " kg");
+                sb.Append("   (di tas: " + inv.Count(def.Id) + " | di warung: " + WarungStorage.StockFresh(def.Id) + ")");
+                if (!string.IsNullOrEmpty(def.Description))
+                {
+                    sb.Append("\n     <size=18><color=#C0C0C0>" + def.Description + "</color></size>");
+                }
+                sb.Append("\n");
+            }
+            sb.Append("\n<size=20><i>* Bahan masakan mentah cepat basi jika tidak disimpan di kulkas warung.</i></size>");
             return sb.ToString();
         }
     }

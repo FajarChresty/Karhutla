@@ -65,13 +65,26 @@ namespace Karhutla
             string sat = w.RatedCustomers > 0 ? Mathf.RoundToInt(w.OverallSatisfaction) + "/100" : "-";
             sb.Append("\nKepuasan keseluruhan: " + sat);
 
-            sb.Append("\n\nHidangan siap (gudang+kulkas):  Nasi " + WarungStorage.StockFresh(ItemDatabase.Nasi)
-                      + " | Air " + WarungStorage.StockFresh(ItemDatabase.Air)
-                      + " | Kopi " + WarungStorage.StockFresh(ItemDatabase.Kopi)
-                      + " | Masker " + WarungStorage.StockFresh(ItemDatabase.Masker));
-            sb.Append("\nBahan: Beras " + WarungStorage.StockFresh(ItemDatabase.Beras)
-                      + " | Sayur " + WarungStorage.StockFresh(ItemDatabase.Sayur)
-                      + " | B.Kopi " + WarungStorage.StockFresh(ItemDatabase.BubukKopi));
+            int unlockedCount = RecipeManager.Instance != null ? RecipeManager.Instance.GetUnlockedRecipes().Count : 5;
+            sb.Append("\nResep Masakan Terbuka: <color=#7CFC8A>" + unlockedCount + " / 12 Menu</color>");
+
+            // Tampilkan stok hidangan yang siap dihidangkan
+            sb.Append("\n\n<b>Hidangan Siap Saji:</b>\n  ");
+            int dishCount = 0;
+            string[] keyDishes = { ItemDatabase.Nasi, ItemDatabase.Kopi, ItemDatabase.TehHangat, ItemDatabase.PisangGoreng, ItemDatabase.SayurAsem,
+                                  ItemDatabase.NasiGoreng, ItemDatabase.MieRebus, ItemDatabase.EsJeruk, ItemDatabase.IkanBakar, ItemDatabase.AyamGoreng,
+                                  ItemDatabase.BuburKacang, ItemDatabase.WedangJahe, ItemDatabase.Air, ItemDatabase.Masker };
+            foreach (var dId in keyDishes)
+            {
+                int stk = WarungStorage.StockFresh(dId);
+                if (stk > 0)
+                {
+                    var def = ItemDatabase.Get(dId);
+                    sb.Append((def != null ? def.DisplayName : dId) + " (" + stk + ")  ");
+                    dishCount++;
+                }
+            }
+            if (dishCount == 0) sb.Append("<color=#A0A0A0>Belum ada masakan matang (masak di dapur!)</color>");
 
             sb.Append("\n\n<b>Pesanan berjalan</b>");
             if (w.ActiveCount == 0)

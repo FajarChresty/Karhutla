@@ -94,7 +94,14 @@ namespace Karhutla
 
         public event Action<StoryPhase> OnPhaseChanged;
 
-        private void Awake() { Instance = this; }
+        private void Awake()
+        {
+            Instance = this;
+            if (FindFirstObjectByType<ScriptedStorylineEventManager>() == null)
+            {
+                gameObject.AddComponent<ScriptedStorylineEventManager>();
+            }
+        }
 
         private void Start()
         {
@@ -150,22 +157,38 @@ namespace Karhutla
             if (newPhase == CurrentPhase) return;
             CurrentPhase = newPhase;
 
-            // Pesan fase narasi generik (dummy sebelum narrative final diintegrasikan)
+            // Event Storyline Sinematik & Notifikasi Narasi (GDD 3.3, 3.4 & 8.3)
             switch (newPhase)
             {
                 case StoryPhase.TandaAwal:
                     Notifier.Show("Hari ke-" + day + " (Bulan 1): tanda awal masalah lingkungan mulai terlihat di sekitar desa.");
                     break;
                 case StoryPhase.InsidenKorupsi:
-                    Notifier.Show("Hari ke-" + day + " (Bulan 2): sebuah insiden terkait korupsi perizinan lahan mulai memanas.");
+                    if (ScriptedStorylineEventManager.Instance != null)
+                    {
+                        ScriptedStorylineEventManager.Instance.TriggerCorruptionIncidentEvent();
+                    }
+                    else
+                    {
+                        Notifier.Show("Hari ke-" + day + " (Bulan 2): sebuah insiden terkait korupsi perizinan lahan mulai memanas.");
+                    }
                     break;
                 case StoryPhase.Ketegangan:
                     Notifier.Show("Hari ke-" + day + " (Bulan 2): ketegangan warga dan kecurigaan meningkat seiring kemarau parah.");
                     break;
+                case StoryPhase.KebakaranMulai:
+                    if (ScriptedStorylineEventManager.Instance != null)
+                    {
+                        ScriptedStorylineEventManager.Instance.TriggerForestFireOutbreakEvent();
+                    }
+                    else
+                    {
+                        Notifier.Show("Hari ke-" + day + " (Bulan 3): KEBAKARAN HUTAN DIMULAI! Asap pekat dan api berkobar di utara.");
+                    }
+                    break;
                 case StoryPhase.PuncakDarurat:
                     Notifier.Show("Hari ke-" + day + " (Bulan 4): DARURAT! Kebakaran hutan mencapai puncak darurat di sekitar desa!");
                     break;
-                // KebakaranMulai: pesan ditampilkan DisasterSystem saat api benar-benar mulai.
             }
 
             if (OnPhaseChanged != null) OnPhaseChanged(newPhase);

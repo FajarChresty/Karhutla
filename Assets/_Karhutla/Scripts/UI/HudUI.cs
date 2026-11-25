@@ -86,7 +86,7 @@ namespace Karhutla
             // Bantuan kontrol (kanan bawah) - font diperkecil dan padat
             var help = UIFactory.CreateText(root, "Teks Kontrol", 13, TextAnchor.LowerRight, new Color(1f, 1f, 1f, 0.7f));
             UIFactory.Place(help.rectTransform, new Vector2(1f, 0f), new Vector2(1f, 0f), new Vector2(-20f, 20f), new Vector2(480f, 180f));
-            help.text = "WASD  Gerak     Shift  Lari\nE  Interaksi     Q  Aksi kedua     R  Aksi ketiga (barter)\nZ / C  Putar kamera (4 Arah)     Scroll  Zoom\nI  Inventaris     K  Hubungan     L  Ringkasan hari\n1-9  Pakai item     G  Buang item basi\n[DEBUG]  T jatah   Y periode   U hari (Shift+U +10)   F api\n[DEBUG]  Shift+P Plot Point Skip (simulasi lompatan cerita)";
+            help.text = "WASD  Gerak     Shift  Lari\nE  Interaksi     Q  Aksi kedua     R  Aksi ketiga (barter)\nZ / C  Putar kamera (4 Arah)     Scroll  Zoom\nI  Inventaris     K  Hubungan     L  Ringkasan hari\n1-9  Pakai item     G  Buang item basi\n[DEBUG]  T jatah   Y periode   U hari (Shift+U +10)   F api\n[DEBUG]  F7 Sinematik H40 (Korupsi)   F8 Sinematik H75 (Karhutla)\n[DEBUG]  Shift+P Plot Point Skip (simulasi lompatan cerita)";
             help.gameObject.AddComponent<Shadow>().effectDistance = new Vector2(1f, -1f);
         }
 

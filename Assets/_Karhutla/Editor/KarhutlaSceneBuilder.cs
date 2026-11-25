@@ -356,7 +356,13 @@ namespace Karhutla.EditorTools
             dayNight.targetCamera = cam;
 
             Child(systems, "Inventory").AddComponent<Inventory>();
-            Child(systems, "SurvivalSystem").AddComponent<SurvivalSystem>();
+            var survival = Child(systems, "SurvivalSystem").AddComponent<SurvivalSystem>();
+            survival.hungerPerHour = 2.5f;
+            survival.thirstPerHour = 3.75f;
+            survival.fatiguePerHour = 2.0f;
+            survival.sprintFatiguePerSecond = 0.35f;
+            survival.smokeFollowRate = 0.045f;
+            survival.smokeDamageMax = 0.25f;
 
             var disasterGo = Child(systems, "DisasterSystem");
             disasterGo.AddComponent<DisasterTimeline>();
@@ -366,11 +372,19 @@ namespace Karhutla.EditorTools
             disaster.burningMaterial = burning;
             disaster.burntMaterial = burnt;
             disaster.flameMaterial = flame;
+            disasterGo.AddComponent<DisasterVisualEffects>();
 
             // Warung dan sistem pendukungnya (Tahap 2 & Sesi 3)
             var warung = Child(systems, "WarungSystem").AddComponent<WarungSystem>();
             warung.spawnPoint = spawnPoint;
             warung.customerMaterial = customerMat;
+            warung.orderPatience = 38f;
+            warung.foodPatience = 65f;
+            warung.sessionDurationSeconds = 160f;
+            warung.baseSpawnInterval = 14f;
+            warung.eatSeconds = 5f;
+            warung.worstServedSatisfaction = 45f;
+            warung.demandInfluence = 0.25f;
             Child(systems, "WarungStorage (Gudang + Kulkas)").AddComponent<WarungStorage>();
             Child(systems, "FoodExpirySystem").AddComponent<FoodExpirySystem>();
             Child(systems, "DayReportSystem").AddComponent<DayReportSystem>();
@@ -395,6 +409,7 @@ namespace Karhutla.EditorTools
             Child(systems, "DialogueManager").AddComponent<DialogueManager>();
             Child(systems, "TimeActivityManager").AddComponent<TimeActivityManager>();
             Child(systems, "PlotPointSkipManager").AddComponent<PlotPointSkipManager>();
+            Child(systems, "ScriptedStorylineEventManager").AddComponent<ScriptedStorylineEventManager>();
             Child(systems, "EndingManager").AddComponent<EndingManager>();
 
             var uiGo = Child(systems, "UI (dibangun saat Play)");
