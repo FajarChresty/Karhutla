@@ -338,17 +338,33 @@ namespace Karhutla.EditorTools
             {
                 var visualGo = new GameObject("CharacterVisual");
                 visualGo.transform.SetParent(player.transform, false);
-                visualGo.transform.localPosition = new Vector3(0f, -0.93f, 0f);
+                visualGo.transform.localPosition = new Vector3(0f, -0.95f, 0f);
                 visualGo.transform.localRotation = Quaternion.identity;
 
                 var charInstance = (GameObject)PrefabUtility.InstantiatePrefab(charPrefab, visualGo.transform);
                 charInstance.name = "character"; // Wajib "character" karena track animasi memiliki jalur "character/Front", dsb.
-                charInstance.transform.localPosition = new Vector3(-2.8256f, 0f, 0f);
+                charInstance.transform.localPosition = Vector3.zero;
                 charInstance.transform.localRotation = Quaternion.identity;
 
                 // Sembunyikan kapsul dummy jika karakter 2D aktif
                 var mr = player.GetComponent<MeshRenderer>();
                 if (mr != null) mr.enabled = false;
+
+                // Blob shadow di bawah kaki pemain
+                var sGo = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
+                sGo.name = "BlobShadow";
+                sGo.transform.SetParent(player.transform, false);
+                sGo.transform.localPosition = new Vector3(0f, -0.98f, 0f);
+                sGo.transform.localScale = new Vector3(0.7f, 0.01f, 0.7f);
+                var col = sGo.GetComponent<Collider>();
+                if (col != null) Object.DestroyImmediate(col);
+                var ren = sGo.GetComponent<Renderer>();
+                if (ren != null)
+                {
+                    ren.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+                    ren.receiveShadows = false;
+                    ren.sharedMaterial = playerMat;
+                }
 
                 var anim = visualGo.AddComponent<Animator>();
                 if (animController != null) anim.runtimeAnimatorController = animController;

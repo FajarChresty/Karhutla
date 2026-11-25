@@ -52,12 +52,13 @@ namespace Karhutla
             var existingVisual = transform.Find("CharacterVisual");
             if (existingVisual != null)
             {
-                // Cek apakah struktur sudah valid (memiliki child "character" dan Animator)
-                if (existingVisual.Find("character") != null && existingVisual.GetComponent<Animator>() != null)
+                var charChild = existingVisual.Find("character");
+                // Cek apakah struktur sudah valid (memiliki child "character" terpusat di (0,0,0) dan Animator)
+                if (charChild != null && charChild.localPosition.sqrMagnitude < 0.01f && existingVisual.GetComponent<Animator>() != null)
                 {
                     return;
                 }
-                // Jika struktur tidak valid (misal dari scene/build lama), bersihkan agar dibuat ulang dengan benar
+                // Jika struktur tidak valid (misal dari build lama yang tergeser), bersihkan agar dibuat ulang dengan benar
                 DestroyImmediate(existingVisual.gameObject);
             }
 
@@ -72,12 +73,12 @@ namespace Karhutla
             {
                 var visualGo = new GameObject("CharacterVisual");
                 visualGo.transform.SetParent(transform, false);
-                visualGo.transform.localPosition = new Vector3(0f, -0.93f, 0f);
+                visualGo.transform.localPosition = new Vector3(0f, -0.95f, 0f);
                 visualGo.transform.localRotation = Quaternion.identity;
 
                 var charInstance = Instantiate(prefab, visualGo.transform);
                 charInstance.name = "character"; // Wajib "character" karena track animasi memiliki jalur "character/Front", dsb.
-                charInstance.transform.localPosition = new Vector3(-2.8256f, 0f, 0f);
+                charInstance.transform.localPosition = Vector3.zero;
                 charInstance.transform.localRotation = Quaternion.identity;
 
                 // Sembunyikan mesh kapsul dummy dan penunjuk arah
@@ -85,6 +86,26 @@ namespace Karhutla
                 if (mr != null) mr.enabled = false;
                 var nose = transform.Find("Penunjuk Arah");
                 if (nose != null) nose.gameObject.SetActive(false);
+
+                // Tambahkan bayangan kontak (blob shadow) sederhana di bawah kaki agar karakter tidak tampak melayang
+                var shadow = transform.Find("BlobShadow");
+                if (shadow == null)
+                {
+                    var sGo = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
+                    sGo.name = "BlobShadow";
+                    sGo.transform.SetParent(transform, false);
+                    sGo.transform.localPosition = new Vector3(0f, -0.98f, 0f);
+                    sGo.transform.localScale = new Vector3(0.7f, 0.01f, 0.7f);
+                    var col = sGo.GetComponent<Collider>();
+                    if (col != null) DestroyImmediate(col);
+                    var ren = sGo.GetComponent<Renderer>();
+                    if (ren != null)
+                    {
+                        ren.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+                        ren.receiveShadows = false;
+                        ren.material.color = new Color(0.1f, 0.1f, 0.1f, 0.6f);
+                    }
+                }
 
                 // Pasang controller animasi pada CharacterVisual
                 var anim = visualGo.GetComponent<Animator>();
