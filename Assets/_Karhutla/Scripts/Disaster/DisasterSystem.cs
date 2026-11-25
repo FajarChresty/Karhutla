@@ -5,19 +5,6 @@ namespace Karhutla
 {
     public enum DangerLevel { Aman, Waspada, Bahaya, Kritis }
 
-    /// <summary>
-    /// Simulasi kebakaran sederhana, dijadwalkan berdasarkan HARI (GDD 3.3 dan 8.3).
-    ///
-    /// Aturan jadwal:
-    ///  - TIDAK ada api aktif sebelum DisasterTimeline.fireStartDay (sekitar Hari 60).
-    ///  - Api mulai di awal hari itu dari satu titik (fireOrigin) dengan radius kecil.
-    ///  - Dampak meningkat BERTAHAP: radius tumbuh linear dari initialRadius sampai maxRadius selama
-    ///    spreadDaysToMaxRadius hari (agar desa tidak langsung tak layak huni di Hari 60).
-    ///  - Radius dihitung dari menit simulasi sejak api mulai, jadi konsisten walau waktu diloncati (debug).
-    ///
-    /// ASUMSI PROTOTYPE (bukan desain final): bentuk lingkaran, asap menjangkau smokeReach di luar garis api,
-    /// pohon menyala lalu hangus, ambang bahaya. Belum ada mekanik memadamkan api.
-    /// </summary>
     public class DisasterSystem : MonoBehaviour
     {
         public static DisasterSystem Instance { get; private set; }
