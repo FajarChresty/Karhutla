@@ -140,98 +140,105 @@ namespace Karhutla.EditorTools
 
             // Rumah-rumah & Fasilitas Desa (GDD Bab 6 & 8)
             var houses = new GameObject("Rumah").transform;
-            CreateHouse(houses, "Rumah Pak RT", new Vector2(-12f, 6f), new Vector3(6f, 3f, 5f), wall, roof,
+            CreateHouse(houses, "Rumah Pak RT", new Vector2(-16f, 16f), new Vector3(7f, 3.2f, 6f), wall, roof,
                 "Rumah Pak RT Bambang. Tempat tinggal sesepuh lingkungan warga RT 02.");
-            CreateHouse(houses, "Rumah Warga", new Vector2(-14f, -9f), new Vector3(6f, 3f, 5f), wall, roof,
+            CreateHouse(houses, "Rumah Warga", new Vector2(-30f, 14f), new Vector3(7f, 3.2f, 6f), wall, roof,
                 "Rumah warga desa.");
-            CreateHouse(houses, "Gudang Desa", new Vector2(3f, -14f), new Vector3(7f, 3f, 5f), wall, roof,
+            CreateHouse(houses, "Gudang Desa", new Vector2(6f, -18f), new Vector3(7f, 3.2f, 5.5f), wall, roof,
                 "Gudang logistik dan persediaan darurat desa.");
             VillageRosterBuilder.BuildLandmarks(houses, wall, roof, wood, metal);
 
             // Bale-bale (tempat istirahat)
             var baleRoot = new GameObject("Bale-bale").transform;
-            baleRoot.position = new Vector3(-6f, 0f, -6f);
-            var bale = Prim(PrimitiveType.Cube, "Bale-bale Alas", baleRoot, new Vector3(0f, 0.3f, 0f), new Vector3(3f, 0.6f, 2f), wood, true);
+            baleRoot.position = new Vector3(-4f, 0f, -14f);
+            var bale = Prim(PrimitiveType.Cube, "Bale-bale Alas", baleRoot, new Vector3(0f, 0.3f, 0f), new Vector3(3.5f, 0.6f, 2.4f), wood, true);
             var rest = bale.AddComponent<RestSpot>();
             rest.promptText = "Tidur sampai besok";
             rest.interactRange = 2.5f;
             AddLabel(baleRoot, new Vector3(0f, 1.6f, 0f), "Bale-bale", Color.white, 0.8f);
 
-            // ---------- Warung (Tahap 2: layout operasional Diner Dash) ----------
+            // ---------- Warung & Rumah Pemain (GDD Bab 3.2: layout operasional Diner Dash) ----------
             // Area: Dapur/Persiapan (kiri), Gudang + Kulkas (kanan), Area Pelayanan (kasir), Area Pelanggan (3 meja di depan).
             var warungRoot = new GameObject("Warung").transform;
             Material white = Mat("Kulkas", new Color(0.92f, 0.95f, 0.97f));
             Material stove = Mat("Kompor", new Color(0.18f, 0.18f, 0.2f));
             Material chair = Mat("Kursi", new Color(0.6f, 0.4f, 0.25f));
 
-            Prim(PrimitiveType.Cube, "Warung Dinding Belakang", warungRoot, new Vector3(12f, 1.5f, 10.5f), new Vector3(8f, 3f, 1f), warungWall, true);
-            Prim(PrimitiveType.Cube, "Warung Atap", warungRoot, new Vector3(12f, 3.15f, 9f), new Vector3(9f, 0.3f, 5f), warungRoof, false);
+            // Lantai panggung kayu Warung (memberikan batas ruang yang rapi dan tertata)
+            Prim(PrimitiveType.Cube, "Warung Lantai Panggung", warungRoot, new Vector3(14f, 0.05f, 6.5f), new Vector3(11f, 0.1f, 9.5f), wood, true);
+
+            // Rumah Pemain (Menyatu di bagian belakang warung sesuai GDD Bab 3.2)
+            CreateHouse(houses, "Rumah Pemain", new Vector2(14f, 16f), new Vector3(8f, 3.5f, 6f), warungWall, warungRoof,
+                "Rumah tinggal pemain di belakang warung makan.");
+
+            Prim(PrimitiveType.Cube, "Warung Dinding Belakang", warungRoot, new Vector3(14f, 1.5f, 11f), new Vector3(10f, 3f, 0.4f), warungWall, true);
+            Prim(PrimitiveType.Cube, "Warung Atap", warungRoot, new Vector3(14f, 3.25f, 7f), new Vector3(11.2f, 0.3f, 8.5f), warungRoof, false);
 
             // Area pelayanan: kasir (hanya ringkasan; pembayaran terjadi di meja pelanggan)
-            var counter = Prim(PrimitiveType.Cube, "Warung Kasir", warungRoot, new Vector3(12f, 0.55f, 6.4f), new Vector3(5.5f, 1.1f, 0.9f), wood, true);
+            var counter = Prim(PrimitiveType.Cube, "Warung Kasir", warungRoot, new Vector3(14f, 0.6f, 6.8f), new Vector3(6f, 1.1f, 0.8f), wood, true);
             var counterInt = counter.AddComponent<WarungInteractable>();
             counterInt.mode = WarungInteractable.Mode.Counter;
             counterInt.interactRange = 3.5f;
 
-            var signPost = Prim(PrimitiveType.Cube, "Papan Warung", warungRoot, new Vector3(7.3f, 0.7f, 4.8f), new Vector3(1.4f, 1.4f, 0.3f), sign, true);
+            var signPost = Prim(PrimitiveType.Cube, "Papan Warung", warungRoot, new Vector3(10.2f, 0.8f, 6.8f), new Vector3(0.8f, 1.4f, 0.2f), sign, true);
             var signInt = signPost.AddComponent<WarungInteractable>();
             signInt.mode = WarungInteractable.Mode.Sign;
             signInt.interactRange = 2.2f;
 
             // Area dapur / persiapan makanan
-            var kompor = Prim(PrimitiveType.Cube, "Dapur Kompor", warungRoot, new Vector3(8.8f, 0.5f, 8.8f), new Vector3(1.6f, 1f, 1.4f), stove, true);
+            var kompor = Prim(PrimitiveType.Cube, "Dapur Kompor", warungRoot, new Vector3(10.5f, 0.55f, 9.5f), new Vector3(1.6f, 1f, 1.2f), stove, true);
             var kitchen = kompor.AddComponent<KitchenStation>();
             kitchen.interactRange = 2.4f;
-            Prim(PrimitiveType.Cube, "Meja Persiapan", warungRoot, new Vector3(10.7f, 0.45f, 9.6f), new Vector3(1.8f, 0.9f, 0.8f), wood, true);
+            Prim(PrimitiveType.Cube, "Meja Persiapan", warungRoot, new Vector3(12.8f, 0.5f, 9.8f), new Vector3(1.8f, 0.9f, 0.8f), wood, true);
 
             // Area penyimpanan: gudang dan kulkas
-            var gudang = Prim(PrimitiveType.Cube, "Gudang Warung", warungRoot, new Vector3(16.9f, 0.8f, 8.2f), new Vector3(1.2f, 1.6f, 2f), wood, true);
+            var gudang = Prim(PrimitiveType.Cube, "Gudang Warung", warungRoot, new Vector3(17.8f, 0.9f, 9.5f), new Vector3(1.6f, 1.8f, 1.6f), wood, true);
             var gudangInt = gudang.AddComponent<StorageInteractable>();
             gudangInt.kind = StorageKind.Gudang;
             gudangInt.interactRange = 2.4f;
 
-            var kulkas = Prim(PrimitiveType.Cube, "Kulkas", warungRoot, new Vector3(14.9f, 1f, 9.8f), new Vector3(1f, 2f, 0.9f), white, true);
+            var kulkas = Prim(PrimitiveType.Cube, "Kulkas", warungRoot, new Vector3(15.5f, 1.1f, 9.8f), new Vector3(1f, 2.2f, 0.9f), white, true);
             var kulkasInt = kulkas.AddComponent<StorageInteractable>();
             kulkasInt.kind = StorageKind.Kulkas;
             kulkasInt.interactRange = 2.4f;
 
-            AddLabel(warungRoot, new Vector3(12f, 4.6f, 7f), "WARUNG", new Color(1f, 0.9f, 0.4f), 1.6f);
-            AddLabel(warungRoot, new Vector3(7.3f, 2.1f, 4.8f), "Buka/Tutup", Color.white, 0.7f);
-            AddLabel(warungRoot, new Vector3(12f, 1.8f, 6.4f), "Kasir / Area Pelayanan", Color.white, 0.6f);
-            AddLabel(warungRoot, new Vector3(8.8f, 1.9f, 8.8f), "Dapur (Area Persiapan)", Color.white, 0.6f);
-            AddLabel(warungRoot, new Vector3(10.7f, 1.6f, 9.6f), "Meja Persiapan", Color.white, 0.5f);
-            AddLabel(warungRoot, new Vector3(16.9f, 2.4f, 8.2f), "Gudang", Color.white, 0.7f);
-            AddLabel(warungRoot, new Vector3(14.9f, 2.5f, 9.8f), "Kulkas", Color.white, 0.7f);
+            AddLabel(warungRoot, new Vector3(14f, 4.6f, 7f), "WARUNG", new Color(1f, 0.9f, 0.4f), 1.6f);
+            AddLabel(warungRoot, new Vector3(10.2f, 2.1f, 6.8f), "Buka/Tutup", Color.white, 0.7f);
+            AddLabel(warungRoot, new Vector3(14f, 1.8f, 6.8f), "Kasir / Area Pelayanan", Color.white, 0.6f);
+            AddLabel(warungRoot, new Vector3(10.5f, 1.9f, 9.5f), "Dapur (Area Persiapan)", Color.white, 0.6f);
+            AddLabel(warungRoot, new Vector3(12.8f, 1.6f, 9.8f), "Meja Persiapan", Color.white, 0.5f);
+            AddLabel(warungRoot, new Vector3(17.8f, 2.4f, 9.5f), "Gudang Bahan", Color.white, 0.7f);
+            AddLabel(warungRoot, new Vector3(15.5f, 2.5f, 9.8f), "Kulkas", Color.white, 0.7f);
 
             // Area pelanggan: tiga meja (Cylinder) dengan kursi (Cube) sebagai titik duduk
             var tablesRoot = new GameObject("Area Pelanggan").transform;
             tablesRoot.SetParent(warungRoot, false);
-            float[] tableX = { 6.5f, 12f, 17.5f };
+            float[] tableX = { 10.5f, 14f, 17.5f };
             for (int i = 0; i < tableX.Length; i++)
             {
-                var table = Prim(PrimitiveType.Cylinder, "Meja " + (i + 1), tablesRoot, new Vector3(tableX[i], 0.4f, 1.2f), new Vector3(1.5f, 0.4f, 1.5f), wood, true);
+                var table = Prim(PrimitiveType.Cylinder, "Meja " + (i + 1), tablesRoot, new Vector3(tableX[i], 0.45f, 3.8f), new Vector3(1.5f, 0.4f, 1.5f), wood, true);
                 var seat = new GameObject("Titik Duduk " + (i + 1)).transform;
                 seat.SetParent(tablesRoot, false);
-                seat.position = new Vector3(tableX[i], 0f, -0.9f);
-                Prim(PrimitiveType.Cube, "Kursi " + (i + 1), tablesRoot, new Vector3(tableX[i], 0.25f, -0.4f), new Vector3(0.7f, 0.5f, 0.5f), chair, false);
+                seat.position = new Vector3(tableX[i], 0f, 2.5f);
+                Prim(PrimitiveType.Cube, "Kursi " + (i + 1), tablesRoot, new Vector3(tableX[i], 0.25f, 2.7f), new Vector3(0.7f, 0.5f, 0.5f), chair, false);
 
                 var ct = table.AddComponent<CustomerTable>();
                 ct.tableNumber = i + 1;
                 ct.seatPoint = seat;
                 ct.interactRange = 2.4f;
-                AddLabel(tablesRoot, new Vector3(tableX[i], 1.4f, 1.2f), "Meja " + (i + 1), Color.white, 0.6f);
+                AddLabel(tablesRoot, new Vector3(tableX[i], 1.4f, 3.8f), "Meja " + (i + 1), Color.white, 0.6f);
             }
 
             var spawnPoint = new GameObject("TitikMunculPelanggan").transform;
             spawnPoint.SetParent(warungRoot, false);
-            spawnPoint.position = new Vector3(24f, 0f, 0f);
+            spawnPoint.position = new Vector3(22f, 0f, 3.8f);
 
             // ---------- Pasar (belanja bahan, memakai sesi waktu) ----------
             var pasarRoot = new GameObject("Pasar").transform;
-            var pasarBase = Prim(PrimitiveType.Cube, "Lapak Pasar", pasarRoot, new Vector3(-18f, 0.6f, 2f), new Vector3(3.5f, 1.2f, 1.6f), wood, true);
+            var pasarBase = Prim(PrimitiveType.Cube, "Lapak Pasar", pasarRoot, new Vector3(-34f, 0.6f, -4f), new Vector3(4f, 1.2f, 2f), wood, true);
             pasarBase.AddComponent<MarketStall>().interactRange = 2.6f;
-            Prim(PrimitiveType.Cube, "Atap Pasar", pasarRoot, new Vector3(-18f, 3f, 2f), new Vector3(4.4f, 0.25f, 3f), warungRoof, false);
-            AddLabel(pasarRoot, new Vector3(-18f, 3.9f, 2f), "PASAR", new Color(1f, 0.9f, 0.4f), 1.2f);
+            Prim(PrimitiveType.Cube, "Atap Pasar", pasarRoot, new Vector3(-34f, 3f, -4f), new Vector3(5f, 0.25f, 3.2f), warungRoof, false);
+            AddLabel(pasarRoot, new Vector3(-34f, 3.9f, -4f), "PASAR", new Color(1f, 0.9f, 0.4f), 1.2f);
 
             // ---------- Pohon (Cylinder + Sphere) ----------
             var forest = new GameObject("Hutan").transform;
@@ -254,62 +261,65 @@ namespace Karhutla.EditorTools
                 extra++;
             }
 
-            // ---------- Item di dunia ----------
+            // ---------- Item di dunia (Ditata rapi di atas rak/meja/lokasi logistik logis) ----------
             var pickups = new GameObject("Item").transform;
-            CreatePickup(pickups, ItemDatabase.Nasi, new Vector3(3f, 0.8f, 3f));
-            CreatePickup(pickups, ItemDatabase.Nasi, new Vector3(-2f, 0.8f, -8f));
-            CreatePickup(pickups, ItemDatabase.Nasi, new Vector3(9f, 0.8f, -7f));
-            CreatePickup(pickups, ItemDatabase.Air, new Vector3(1f, 0.8f, 6f));
-            CreatePickup(pickups, ItemDatabase.Air, new Vector3(-8f, 0.8f, 1f));
-            CreatePickup(pickups, ItemDatabase.Air, new Vector3(10f, 0.8f, -4f));
-            CreatePickup(pickups, ItemDatabase.Masker, new Vector3(14f, 0.8f, -3f));
-            CreatePickup(pickups, ItemDatabase.Masker, new Vector3(-6f, 0.8f, -12f));
-            CreatePickup(pickups, ItemDatabase.Kopi, new Vector3(5f, 0.8f, -10f));
-            CreatePickup(pickups, ItemDatabase.Kopi, new Vector3(-3f, 0.8f, 3f));
-            CreatePickup(pickups, ItemDatabase.Beras, new Vector3(8f, 0.8f, -2f));
-            CreatePickup(pickups, ItemDatabase.Sayur, new Vector3(-5f, 0.8f, -4f));
-            CreatePickup(pickups, ItemDatabase.BubukKopi, new Vector3(13f, 0.8f, -8f));
-            CreatePickup(pickups, ItemDatabase.Teh, new Vector3(-16f, 0.8f, 3f));
-            CreatePickup(pickups, ItemDatabase.Telur, new Vector3(-17f, 0.8f, 1f));
-            CreatePickup(pickups, ItemDatabase.Pisang, new Vector3(-19f, 0.8f, 2f));
-            CreatePickup(pickups, ItemDatabase.Mie, new Vector3(-20f, 0.8f, 3f));
+            // Di Warung & Dapur
+            CreatePickup(pickups, ItemDatabase.Nasi, new Vector3(12.8f, 1.0f, 9.8f));
+            CreatePickup(pickups, ItemDatabase.Air, new Vector3(15.5f, 0.6f, 8.8f));
+            CreatePickup(pickups, ItemDatabase.Beras, new Vector3(17.8f, 1.2f, 9.5f));
+            CreatePickup(pickups, ItemDatabase.Kopi, new Vector3(14.5f, 1.1f, 6.8f));
+            CreatePickup(pickups, ItemDatabase.BubukKopi, new Vector3(11.5f, 1.0f, 9.5f));
+
+            // Di Lapak Pasar Desa
+            CreatePickup(pickups, ItemDatabase.Sayur, new Vector3(-31.2f, 1.25f, -2f));
+            CreatePickup(pickups, ItemDatabase.Telur, new Vector3(-30.6f, 1.25f, -2f));
+            CreatePickup(pickups, ItemDatabase.Pisang, new Vector3(-30.0f, 1.25f, -2f));
+            CreatePickup(pickups, ItemDatabase.Mie, new Vector3(-29.4f, 1.25f, -2f));
+            CreatePickup(pickups, ItemDatabase.Teh, new Vector3(-28.8f, 1.25f, -2f));
+
+            // Di Posko & Fasilitas Logistik
+            CreatePickup(pickups, ItemDatabase.Masker, new Vector3(24f, 1.0f, 24f));
+            CreatePickup(pickups, ItemDatabase.Masker, new Vector3(-24f, 1.0f, 22f));
+            CreatePickup(pickups, ItemDatabase.Air, new Vector3(36f, 0.8f, 8f));
+            CreatePickup(pickups, ItemDatabase.Air, new Vector3(0f, 0.8f, 24f));
+            CreatePickup(pickups, ItemDatabase.Nasi, new Vector3(-6f, 0.7f, -10f));
 
             // ---------- Titik Investigasi & Sekat Bakar (Sesi 4) ----------
             var storyObjects = new GameObject("Story_Objects").transform;
 
             // 1. Titik Investigasi Berkas Balai Desa
-            var clueBalai = Prim(PrimitiveType.Cube, "Meja Arsip Izin Konsesi", storyObjects, new Vector3(-2f, 0.5f, 10.5f), new Vector3(1.6f, 0.9f, 0.9f), wood, true);
+            var clueBalai = Prim(PrimitiveType.Cube, "Meja Arsip Izin Konsesi", storyObjects, new Vector3(0f, 0.5f, 23.5f), new Vector3(1.6f, 0.9f, 0.9f), wood, true);
             var clueSpotBalai = clueBalai.AddComponent<InvestigationClueSpot>();
             clueSpotBalai.clueId = InvestigationSystem.ClueKonsesi;
             clueSpotBalai.interactRange = 2.4f;
-            AddLabel(storyObjects, new Vector3(-2f, 1.4f, 10.5f), "Arsip Perizinan", Color.yellow, 0.6f);
+            AddLabel(storyObjects, new Vector3(0f, 1.4f, 23.5f), "Arsip Perizinan", Color.yellow, 0.6f);
 
             // 2. Titik Investigasi Peta di Pondok Ladang Gambut
-            var cluePondok = Prim(PrimitiveType.Cube, "Meja Peta Ladang Gambut", storyObjects, new Vector3(-32f, 0.5f, -8f), new Vector3(1.4f, 0.8f, 0.8f), wood, true);
+            var cluePondok = Prim(PrimitiveType.Cube, "Meja Peta Ladang Gambut", storyObjects, new Vector3(-42f, 0.5f, -12f), new Vector3(1.4f, 0.8f, 0.8f), wood, true);
             var clueSpotPondok = cluePondok.AddComponent<InvestigationClueSpot>();
             clueSpotPondok.clueId = InvestigationSystem.CluePetaBakar;
             clueSpotPondok.interactRange = 2.4f;
-            AddLabel(storyObjects, new Vector3(-32f, 1.3f, -8f), "Peta Titik Api", Color.yellow, 0.6f);
+            AddLabel(storyObjects, new Vector3(-42f, 1.3f, -12f), "Peta Titik Api", Color.yellow, 0.6f);
 
             // 3. Titik Sekat Bakar Perbatasan Utara (3 Sektor)
             var firebreaks = new GameObject("Sekat_Bakar_Utara").transform;
             firebreaks.SetParent(storyObjects, false);
 
-            CreateFirebreakZone(firebreaks, "Sektor Barat", new Vector3(-24f, 0.05f, 24f), wood);
-            CreateFirebreakZone(firebreaks, "Sektor Tengah", new Vector3(0f, 0.05f, 24f), wood);
-            CreateFirebreakZone(firebreaks, "Sektor Timur", new Vector3(24f, 0.05f, 24f), wood);
+            CreateFirebreakZone(firebreaks, "Sektor Barat", new Vector3(-24f, 0.05f, 32f), wood);
+            CreateFirebreakZone(firebreaks, "Sektor Tengah", new Vector3(0f, 0.05f, 34f), wood);
+            CreateFirebreakZone(firebreaks, "Sektor Timur", new Vector3(24f, 0.05f, 32f), wood);
 
             // ---------- Bahaya Lingkungan Tambahan (GDD Bab 8.4) ----------
             var hazardsRoot = new GameObject("Bahaya_Lingkungan").transform;
 
             // 1. Zona Tanah Gambut Ambles / Labil
-            CreateUnstableGroundZone(hazardsRoot, "Tanah Gambut Labil Utara", new Vector3(8f, 0f, 29f), 4.5f);
-            CreateUnstableGroundZone(hazardsRoot, "Tanah Gambut Labil Barat", new Vector3(-28f, 0f, -3f), 4.2f);
-            CreateUnstableGroundZone(hazardsRoot, "Tanah Gambut Labil Timur", new Vector3(25f, 0f, 10f), 4.0f);
+            CreateUnstableGroundZone(hazardsRoot, "Tanah Gambut Labil Utara", new Vector3(8f, 0f, 38f), 4.5f);
+            CreateUnstableGroundZone(hazardsRoot, "Tanah Gambut Labil Barat", new Vector3(-35f, 0f, -6f), 4.2f);
+            CreateUnstableGroundZone(hazardsRoot, "Tanah Gambut Labil Timur", new Vector3(30f, 0f, 18f), 4.0f);
 
             // 2. Sumber Air Warga (Sumur Gali Desa & Sumber Air Rawa)
-            CreateWaterSource(hazardsRoot, "Sumur Gali Balai Desa", new Vector3(-5f, 0f, 6f));
-            CreateWaterSource(hazardsRoot, "Sumber Air Kanal Gambut", new Vector3(26f, 0f, 21f));
+            CreateWaterSource(hazardsRoot, "Sumur Gali Balai Desa", new Vector3(-6f, 0f, 8f));
+            CreateWaterSource(hazardsRoot, "Sumber Air Kanal Gambut", new Vector3(36f, 0f, 14f));
 
             // ---------- NPC Roster (15 Karakter Bernama & Jadwal - GDD Bab 6 & 8) ----------
             var npcs = new GameObject("NPC").transform;
@@ -319,7 +329,7 @@ namespace Karhutla.EditorTools
             var player = GameObject.CreatePrimitive(PrimitiveType.Capsule);
             player.name = "Player";
             player.tag = "Player";
-            player.transform.position = new Vector3(6f, 1f, -2f);
+            player.transform.position = new Vector3(14f, 1f, 0f);
             player.GetComponent<Renderer>().sharedMaterial = playerMat;
             Object.DestroyImmediate(player.GetComponent<CapsuleCollider>());
             var cc = player.AddComponent<CharacterController>();
@@ -338,24 +348,25 @@ namespace Karhutla.EditorTools
             {
                 var visualGo = new GameObject("CharacterVisual");
                 visualGo.transform.SetParent(player.transform, false);
-                visualGo.transform.localPosition = new Vector3(0f, -0.95f, 0f);
+                visualGo.transform.localPosition = new Vector3(0f, -1.02f, 0f);
                 visualGo.transform.localRotation = Quaternion.identity;
 
                 var charInstance = (GameObject)PrefabUtility.InstantiatePrefab(charPrefab, visualGo.transform);
                 charInstance.name = "character"; // Wajib "character" karena track animasi memiliki jalur "character/Front", dsb.
-                charInstance.transform.localPosition = Vector3.zero;
+                charInstance.transform.localPosition = new Vector3(0f, 0f, -0.52916f); // Kompensasi offset Z rig Alvin (+0.52916) agar tepat di titik tengah (0,0)
                 charInstance.transform.localRotation = Quaternion.identity;
 
                 // Sembunyikan kapsul dummy jika karakter 2D aktif
                 var mr = player.GetComponent<MeshRenderer>();
                 if (mr != null) mr.enabled = false;
 
-                // Blob shadow di bawah kaki pemain
-                var sGo = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
+                // Blob shadow lembut kontak di bawah kaki pemain
+                var sGo = GameObject.CreatePrimitive(PrimitiveType.Quad);
                 sGo.name = "BlobShadow";
                 sGo.transform.SetParent(player.transform, false);
-                sGo.transform.localPosition = new Vector3(0f, -0.98f, 0f);
-                sGo.transform.localScale = new Vector3(0.7f, 0.01f, 0.7f);
+                sGo.transform.localPosition = new Vector3(0f, -0.992f, 0f);
+                sGo.transform.localRotation = Quaternion.Euler(90f, 0f, 0f);
+                sGo.transform.localScale = new Vector3(0.95f, 0.65f, 1f);
                 var col = sGo.GetComponent<Collider>();
                 if (col != null) Object.DestroyImmediate(col);
                 var ren = sGo.GetComponent<Renderer>();
@@ -363,7 +374,29 @@ namespace Karhutla.EditorTools
                 {
                     ren.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
                     ren.receiveShadows = false;
-                    ren.sharedMaterial = playerMat;
+                    Shader shadowShader = null;
+                    if (UnityEngine.Rendering.GraphicsSettings.currentRenderPipeline != null)
+                    {
+                        shadowShader = Shader.Find("Universal Render Pipeline/Unlit");
+                    }
+                    if (shadowShader == null)
+                    {
+                        shadowShader = Shader.Find("Sprites/Default");
+                    }
+                    if (shadowShader == null)
+                    {
+                        shadowShader = Shader.Find("Unlit/Transparent");
+                    }
+
+                    if (shadowShader != null)
+                    {
+                        var shadowMat = new Material(shadowShader);
+                        shadowMat.mainTexture = PlayerAnimator.GetOrCreateShadowTexture();
+                        shadowMat.color = Color.white;
+                        if (shadowMat.HasProperty("_BaseColor")) shadowMat.SetColor("_BaseColor", Color.white);
+                        if (shadowMat.HasProperty("_Cull")) shadowMat.SetInt("_Cull", (int)UnityEngine.Rendering.CullMode.Off);
+                        ren.sharedMaterial = shadowMat;
+                    }
                 }
 
                 var anim = visualGo.AddComponent<Animator>();

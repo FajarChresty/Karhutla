@@ -13,40 +13,40 @@ namespace Karhutla.EditorTools
     {
         public static void BuildLandmarks(Transform houses, Material wall, Material roof, Material wood, Material metal)
         {
-            // Balai Desa & Kantor Kades
-            CreateStructure(houses, "Balai Desa", new Vector2(-2f, 14f), new Vector3(9f, 3.5f, 7f), wall, roof,
+            // Balai Desa & Kantor Kades (Sisi Utara Lapangan Desa)
+            CreateStructure(houses, "Balai Desa", new Vector2(0f, 28f), new Vector3(11f, 3.8f, 8f), wall, roof,
                 "Balai Desa dan Kantor Kepala Desa. Pusat koordinasi administrasi, musyawarah warga, dan posko bencana utama.");
 
-            // Pustu (Puskesmas Pembantu)
-            CreateStructure(houses, "Puskesmas Pembantu (Pustu)", new Vector2(-22f, 14f), new Vector3(7.5f, 3.2f, 6f), wall, roof,
+            // Pustu (Puskesmas Pembantu - Sudut Barat Laut)
+            CreateStructure(houses, "Puskesmas Pembantu (Pustu)", new Vector2(-26f, 26f), new Vector3(8f, 3.2f, 6.5f), wall, roof,
                 "Pustu Desa. Fasilitas kesehatan yang menangani pencegahan ISPA, pembagian masker medis, dan pertolongan pertama.");
 
-            // Bengkel Mesin & Pompa Kang Dedi
-            CreateStructure(houses, "Bengkel Pompa Kang Dedi", new Vector2(22f, -8f), new Vector3(7f, 3f, 6f), wood, metal,
+            // Bengkel Mesin & Pompa Kang Dedi (Sisi Tenggara)
+            CreateStructure(houses, "Bengkel Pompa Kang Dedi", new Vector2(28f, -14f), new Vector3(8f, 3f, 6f), wood, metal,
                 "Bengkel mesin motor dan pompa air rawa gambut milik Kang Dedi.");
 
-            // Toko Kelontong Grosir Bu Linda
-            CreateStructure(houses, "Toko Kelontong Bu Linda", new Vector2(-10f, -2f), new Vector3(7f, 3f, 6f), wall, roof,
+            // Toko Kelontong Grosir Bu Linda (Sisi Barat Daya - Area Luas dan Mandiri)
+            CreateStructure(houses, "Toko Kelontong Bu Linda", new Vector2(-24f, -16f), new Vector3(8f, 3.2f, 6f), wall, roof,
                 "Toko kelontong grosir sembako desa. Menyediakan kebutuhan pangan kering dan logistik harian.");
 
-            // Posko Relawan MPA & Pos Ronda
-            CreateStructure(houses, "Posko Relawan Pemadam", new Vector2(-4f, 22f), new Vector3(6.5f, 3f, 5f), wood, roof,
+            // Posko Relawan MPA & Menara Pantau (Sudut Timur Laut)
+            CreateStructure(houses, "Posko Relawan Pemadam", new Vector2(26f, 28f), new Vector3(8f, 3.2f, 6f), wood, roof,
                 "Posko siaga Masyarakat Peduli Api (MPA) dan menara pantau karhutla perbatasan utara.");
 
-            // Pondok Ladang Gambut
-            CreateStructure(houses, "Pondok Ladang Gambut", new Vector2(-32f, -10f), new Vector3(6f, 2.8f, 5f), wood, roof,
+            // Pondok Ladang Gambut (Barat Daya Jauh)
+            CreateStructure(houses, "Pondok Ladang Gambut", new Vector2(-44f, -16f), new Vector3(7f, 2.8f, 5.5f), wood, roof,
                 "Pondok istirahat petani di perbatasan ladang gambut dan konsesi perkebunan sawit.");
 
-            // Dermaga Kanal Rawa Pak Yanto
-            CreateStructure(houses, "Dermaga Kanal Rawa", new Vector2(28f, 16f), new Vector3(6f, 2.4f, 4f), wood, wood,
+            // Dermaga Kanal Rawa Pak Yanto (Sisi Timur)
+            CreateStructure(houses, "Dermaga Kanal Rawa", new Vector2(38f, 10f), new Vector3(7f, 2.4f, 5f), wood, wood,
                 "Dermaga perahu rawa gambut dan titik pemantauan sekat kanal air tradisional.");
 
-            // Pondok Adat Tetua Salim
-            CreateStructure(houses, "Pondok Adat Gambut", new Vector2(-30f, 26f), new Vector3(6f, 3f, 5f), wood, roof,
+            // Pondok Adat Tetua Salim (Utara Jauh Hutan Adat)
+            CreateStructure(houses, "Pondok Adat Gambut", new Vector2(-36f, 38f), new Vector3(7f, 3f, 5.5f), wood, roof,
                 "Pondok Tetua Adat Salim, tempat merawat pohon sialang dan kearifan kuno lahan basah gambut.");
 
-            // Pojok Baca & Belajar Desa
-            CreateStructure(houses, "Pojok Baca Siti", new Vector2(-6f, -3.5f), new Vector3(4f, 2.5f, 3.5f), wood, roof,
+            // Pojok Baca & Belajar Desa (Taman Terbuka Sisi Barat Lapangan)
+            CreateStructure(houses, "Pojok Baca Siti", new Vector2(-14f, 4f), new Vector3(5f, 2.6f, 4f), wood, roof,
                 "Pojok baca anak-anak desa yang dikelola oleh Siti.");
         }
 
@@ -209,11 +209,11 @@ namespace Karhutla.EditorTools
             barter.offers.Add(new BarterOffer { itemId = ItemDatabase.Obat, stock = 1, maxStock = 2, minTier = RelationshipTier.Dekat });
 
             var sched = go.AddComponent<NpcSchedule>();
-            sched.SetSlot(TimeOfDay.Pagi, "Warung Makan", new Vector3(10f, 1f, 4f), 2.5f, "Belanja sarapan & ngobrol pagi");
+            sched.SetSlot(TimeOfDay.Pagi, "Warung Makan", new Vector3(14f, 1f, 3.8f), 2.5f, "Belanja sarapan & ngobrol pagi");
             sched.SetSlot(TimeOfDay.Siang, "Rumah Bu Sari", new Vector3(-4f, 1f, 10f), 3f, "Menjahit baju dan menjemur kain");
             sched.SetSlot(TimeOfDay.Malam, "Rumah Bu Sari", new Vector3(-4f, 1f, 10f), 1f, "Istirahat malam di rumah");
             sched.emergencyLocationName = "Dapur Umum Balai Desa";
-            sched.emergencyDestination = new Vector3(-2f, 1f, 11f);
+            sched.emergencyDestination = new Vector3(0f, 1f, 24f);
             sched.emergencyActivity = "Menyiapkan konsumsi pengungsi";
         }
 
@@ -222,7 +222,7 @@ namespace Karhutla.EditorTools
         // =========================================================================
         private static void BuildPakJoko(Transform root, Material mat)
         {
-            var go = SpawnNpcCapsule(root, "NPC Pak Joko", new Vector3(-4f, 1f, 22f), mat);
+            var go = SpawnNpcCapsule(root, "NPC Pak Joko", new Vector3(26f, 1f, 28f), mat);
             var npc = go.AddComponent<NpcController>();
             npc.npcName = "Pak Joko (Relawan)";
             npc.npcId = "Pak Joko";
@@ -278,11 +278,11 @@ namespace Karhutla.EditorTools
             barter.offers.Add(new BarterOffer { itemId = ItemDatabase.Obat, stock = 2, maxStock = 3, minTier = RelationshipTier.Teman });
 
             var sched = go.AddComponent<NpcSchedule>();
-            sched.SetSlot(TimeOfDay.Pagi, "Posko Relawan", new Vector3(-4f, 1f, 22f), 3f, "Pengecekan selang & menara pantau");
-            sched.SetSlot(TimeOfDay.Siang, "Bengkel Pompa", new Vector3(20f, 1f, -7f), 2.5f, "Uji coba mesin pompa air gambut");
-            sched.SetSlot(TimeOfDay.Malam, "Pos Ronda", new Vector3(-4f, 1f, 22f), 2f, "Patroli malam & siaga radio HT");
+            sched.SetSlot(TimeOfDay.Pagi, "Posko Relawan", new Vector3(26f, 1f, 28f), 3f, "Pengecekan selang & menara pantau");
+            sched.SetSlot(TimeOfDay.Siang, "Bengkel Pompa", new Vector3(28f, 1f, -14f), 2.5f, "Uji coba mesin pompa air gambut");
+            sched.SetSlot(TimeOfDay.Malam, "Pos Ronda", new Vector3(26f, 1f, 28f), 2f, "Patroli malam & siaga radio HT");
             sched.emergencyLocationName = "Garis Depan Pemadam";
-            sched.emergencyDestination = new Vector3(-4f, 1f, 25f);
+            sched.emergencyDestination = new Vector3(24f, 1f, 32f);
             sched.emergencyActivity = "Memadamkan kepala api bersama tim MPA";
         }
 
@@ -291,7 +291,7 @@ namespace Karhutla.EditorTools
         // =========================================================================
         private static void BuildBuWarti(Transform root, Material mat)
         {
-            var go = SpawnNpcCapsule(root, "NPC Bu Warti", new Vector3(-18f, 1f, 2f), mat);
+            var go = SpawnNpcCapsule(root, "NPC Bu Warti", new Vector3(-34f, 1f, -4f), mat);
             var npc = go.AddComponent<NpcController>();
             npc.npcName = "Bu Warti (Petani)";
             npc.npcId = "Bu Warti";
@@ -347,11 +347,11 @@ namespace Karhutla.EditorTools
             barter.offers.Add(new BarterOffer { itemId = ItemDatabase.BubukKopi, stock = 2, maxStock = 4, minTier = RelationshipTier.Teman });
 
             var sched = go.AddComponent<NpcSchedule>();
-            sched.SetSlot(TimeOfDay.Pagi, "Pasar Desa", new Vector3(-17f, 1f, 2f), 2.5f, "Menjual hasil panen sayur");
-            sched.SetSlot(TimeOfDay.Siang, "Ladang Gambut", new Vector3(-32f, 1f, -10f), 3.5f, "Menyiram bedengan sayur & parit");
-            sched.SetSlot(TimeOfDay.Malam, "Rumah Bu Warti", new Vector3(-16f, 1f, 8f), 1.5f, "Mengemas benih & istirahat");
+            sched.SetSlot(TimeOfDay.Pagi, "Pasar Desa", new Vector3(-34f, 1f, -4f), 2.5f, "Menjual hasil panen sayur");
+            sched.SetSlot(TimeOfDay.Siang, "Ladang Gambut", new Vector3(-44f, 1f, -16f), 3.5f, "Menyiram bedengan sayur & parit");
+            sched.SetSlot(TimeOfDay.Malam, "Rumah Bu Warti", new Vector3(-30f, 1f, 14f), 1.5f, "Mengemas benih & istirahat");
             sched.emergencyLocationName = "Posko Balai Desa";
-            sched.emergencyDestination = new Vector3(-3f, 1f, 13f);
+            sched.emergencyDestination = new Vector3(0f, 1f, 24f);
             sched.emergencyActivity = "Menyelamatkan bibit & pasokan pangan";
         }
 
@@ -360,7 +360,7 @@ namespace Karhutla.EditorTools
         // =========================================================================
         private static void BuildPakKades(Transform root, Material mat)
         {
-            var go = SpawnNpcCapsule(root, "NPC Pak Kades", new Vector3(-2f, 1f, 14f), mat);
+            var go = SpawnNpcCapsule(root, "NPC Pak Kades", new Vector3(0f, 1f, 28f), mat);
             var npc = go.AddComponent<NpcController>();
             npc.npcName = "Pak Kades Surya";
             npc.npcId = "Pak Kades";
@@ -415,11 +415,11 @@ namespace Karhutla.EditorTools
             barter.offers.Add(new BarterOffer { itemId = ItemDatabase.Oralit, stock = 2, maxStock = 4, minTier = RelationshipTier.Teman });
 
             var sched = go.AddComponent<NpcSchedule>();
-            sched.SetSlot(TimeOfDay.Pagi, "Kantor Balai Desa", new Vector3(-2f, 1f, 14f), 2.5f, "Memeriksa administrasi & arsip desa");
-            sched.SetSlot(TimeOfDay.Siang, "Warung Makan", new Vector3(8f, 1f, 3f), 2f, "Makan siang & serap aspirasi warga");
-            sched.SetSlot(TimeOfDay.Malam, "Balai Desa", new Vector3(-2f, 1f, 16f), 1.5f, "Rapat koordinasi pimpinan");
+            sched.SetSlot(TimeOfDay.Pagi, "Kantor Balai Desa", new Vector3(0f, 1f, 28f), 2.5f, "Memeriksa administrasi & arsip desa");
+            sched.SetSlot(TimeOfDay.Siang, "Warung Makan", new Vector3(14f, 1f, 3.8f), 2f, "Makan siang & serap aspirasi warga");
+            sched.SetSlot(TimeOfDay.Malam, "Balai Desa", new Vector3(0f, 1f, 28f), 1.5f, "Rapat koordinasi pimpinan");
             sched.emergencyLocationName = "Posko Komando Bencana";
-            sched.emergencyDestination = new Vector3(-2f, 1f, 14f);
+            sched.emergencyDestination = new Vector3(0f, 1f, 28f);
             sched.emergencyActivity = "Memimpin koordinasi tanggap darurat";
         }
 
@@ -428,7 +428,7 @@ namespace Karhutla.EditorTools
         // =========================================================================
         private static void BuildPakRT(Transform root, Material mat)
         {
-            var go = SpawnNpcCapsule(root, "NPC Pak RT", new Vector3(-12f, 1f, 6f), mat);
+            var go = SpawnNpcCapsule(root, "NPC Pak RT", new Vector3(-16f, 1f, 16f), mat);
             var npc = go.AddComponent<NpcController>();
             npc.npcName = "Pak RT Bambang";
             npc.npcId = "Pak RT";
@@ -479,11 +479,11 @@ namespace Karhutla.EditorTools
             barter.offers.Add(new BarterOffer { itemId = ItemDatabase.Nasi, stock = 2, maxStock = 4 });
 
             var sched = go.AddComponent<NpcSchedule>();
-            sched.SetSlot(TimeOfDay.Pagi, "Lingkungan Warga RT 02", new Vector3(-10f, 1f, 4f), 3.5f, "Patroli kebersihan parit & sapa warga");
-            sched.SetSlot(TimeOfDay.Siang, "Balai Desa", new Vector3(-3f, 1f, 12f), 2f, "Musyawarah aparatur lingkungan");
-            sched.SetSlot(TimeOfDay.Malam, "Pos Ronda Bale-bale", new Vector3(-5f, 1f, -5f), 2.5f, "Jaga pos ronda & ngopi bersama warga");
+            sched.SetSlot(TimeOfDay.Pagi, "Lingkungan Warga RT 02", new Vector3(-16f, 1f, 10f), 3.5f, "Patroli kebersihan parit & sapa warga");
+            sched.SetSlot(TimeOfDay.Siang, "Balai Desa", new Vector3(0f, 1f, 28f), 2f, "Musyawarah aparatur lingkungan");
+            sched.SetSlot(TimeOfDay.Malam, "Rumah Pak RT", new Vector3(-16f, 1f, 16f), 2.5f, "Jaga pos ronda & ngopi bersama warga");
             sched.emergencyLocationName = "Posko Evakuasi Warga";
-            sched.emergencyDestination = new Vector3(-1f, 1f, 12f);
+            sched.emergencyDestination = new Vector3(0f, 1f, 24f);
             sched.emergencyActivity = "Mendata lansia dan keluarga terdampak";
         }
 
@@ -492,7 +492,7 @@ namespace Karhutla.EditorTools
         // =========================================================================
         private static void BuildBidanRatna(Transform root, Material mat)
         {
-            var go = SpawnNpcCapsule(root, "NPC Bidan Ratna", new Vector3(-22f, 1f, 14f), mat);
+            var go = SpawnNpcCapsule(root, "NPC Bidan Ratna", new Vector3(-26f, 1f, 26f), mat);
             var npc = go.AddComponent<NpcController>();
             npc.npcName = "Bidan Ratna";
             npc.npcId = "Bidan Ratna";
@@ -545,11 +545,11 @@ namespace Karhutla.EditorTools
             barter.offers.Add(new BarterOffer { itemId = ItemDatabase.Obat, stock = 2, maxStock = 4, minTier = RelationshipTier.Teman });
 
             var sched = go.AddComponent<NpcSchedule>();
-            sched.SetSlot(TimeOfDay.Pagi, "Pustu Desa", new Vector3(-22f, 1f, 14f), 2f, "Pemeriksaan kesehatan balita & warga");
-            sched.SetSlot(TimeOfDay.Siang, "Apotek Pustu", new Vector3(-22f, 1f, 14f), 2f, "Persiapan obat ISPA & tabung oksigen");
-            sched.SetSlot(TimeOfDay.Malam, "Rumah Medis Pustu", new Vector3(-24f, 1f, 14f), 1f, "Siaga panggilan darurat medis");
+            sched.SetSlot(TimeOfDay.Pagi, "Pustu Desa", new Vector3(-26f, 1f, 26f), 2f, "Pemeriksaan kesehatan balita & warga");
+            sched.SetSlot(TimeOfDay.Siang, "Posko Relawan", new Vector3(26f, 1f, 28f), 2f, "Persiapan obat ISPA & tabung oksigen");
+            sched.SetSlot(TimeOfDay.Malam, "Pustu Desa", new Vector3(-26f, 1f, 26f), 1f, "Siaga panggilan darurat medis");
             sched.emergencyLocationName = "Posko Medis Darurat";
-            sched.emergencyDestination = new Vector3(-4f, 1f, 13f);
+            sched.emergencyDestination = new Vector3(-26f, 1f, 26f);
             sched.emergencyActivity = "Menangani korban sesak napas & nebulizer";
         }
 
@@ -558,7 +558,7 @@ namespace Karhutla.EditorTools
         // =========================================================================
         private static void BuildPakUdin(Transform root, Material mat)
         {
-            var go = SpawnNpcCapsule(root, "NPC Pak Udin", new Vector3(-18f, 1f, 1f), mat);
+            var go = SpawnNpcCapsule(root, "NPC Pak Udin", new Vector3(-34f, 1f, -4f), mat);
             var npc = go.AddComponent<NpcController>();
             npc.npcName = "Pak Udin (Pedagang)";
             npc.npcId = "Pak Udin";
@@ -610,11 +610,11 @@ namespace Karhutla.EditorTools
             barter.offers.Add(new BarterOffer { itemId = ItemDatabase.BubukKopi, stock = 3, maxStock = 5 });
 
             var sched = go.AddComponent<NpcSchedule>();
-            sched.SetSlot(TimeOfDay.Pagi, "Pasar Desa", new Vector3(-18f, 1f, 1f), 2f, "Berdagang sembako di lapak pasar");
-            sched.SetSlot(TimeOfDay.Siang, "Toko Kelontong", new Vector3(-10f, 1f, -2f), 2f, "Kulakan grosir & ngobrol stok dagang");
-            sched.SetSlot(TimeOfDay.Malam, "Rumah Pasar", new Vector3(-20f, 1f, 3f), 1f, "Menghitung omset & rekap pembukuan");
+            sched.SetSlot(TimeOfDay.Pagi, "Pasar Desa", new Vector3(-34f, 1f, -4f), 2f, "Berdagang sembako di lapak pasar");
+            sched.SetSlot(TimeOfDay.Siang, "Toko Kelontong", new Vector3(-24f, 1f, -16f), 2f, "Kulakan grosir & ngobrol stok dagang");
+            sched.SetSlot(TimeOfDay.Malam, "Rumah Warga", new Vector3(-30f, 1f, 14f), 1f, "Menghitung omset & rekap pembukuan");
             sched.emergencyLocationName = "Gudang Logistik Desa";
-            sched.emergencyDestination = new Vector3(2f, 1f, -13f);
+            sched.emergencyDestination = new Vector3(4f, 1f, -16f);
             sched.emergencyActivity = "Membantu inventaris bantuan pangan";
         }
 
@@ -623,7 +623,7 @@ namespace Karhutla.EditorTools
         // =========================================================================
         private static void BuildKangDedi(Transform root, Material mat)
         {
-            var go = SpawnNpcCapsule(root, "NPC Kang Dedi", new Vector3(22f, 1f, -8f), mat);
+            var go = SpawnNpcCapsule(root, "NPC Kang Dedi", new Vector3(28f, 1f, -14f), mat);
             var npc = go.AddComponent<NpcController>();
             npc.npcName = "Kang Dedi (Bengkel)";
             npc.npcId = "Kang Dedi";
@@ -673,11 +673,11 @@ namespace Karhutla.EditorTools
             barter.offers.Add(new BarterOffer { itemId = ItemDatabase.Air, stock = 3, maxStock = 5 });
 
             var sched = go.AddComponent<NpcSchedule>();
-            sched.SetSlot(TimeOfDay.Pagi, "Bengkel Mesin", new Vector3(22f, 1f, -8f), 3f, "Servis motor warga & mesin diesel");
-            sched.SetSlot(TimeOfDay.Siang, "Bengkel Pompa", new Vector3(22f, 1f, -8f), 2.5f, "Merakit mesin pompa air jinjing");
-            sched.SetSlot(TimeOfDay.Malam, "Bale-bale Desa", new Vector3(-6f, 1f, -6f), 2f, "Minum kopi hitam & santai malam");
+            sched.SetSlot(TimeOfDay.Pagi, "Bengkel Mesin", new Vector3(28f, 1f, -14f), 3f, "Servis motor warga & mesin diesel");
+            sched.SetSlot(TimeOfDay.Siang, "Dermaga Pompa", new Vector3(38f, 1f, 10f), 2.5f, "Merakit mesin pompa air jinjing");
+            sched.SetSlot(TimeOfDay.Malam, "Bale-bale Desa", new Vector3(-4f, 1f, -14f), 2f, "Minum kopi hitam & santai malam");
             sched.emergencyLocationName = "Posko Damkar Relawan";
-            sched.emergencyDestination = new Vector3(-3f, 1f, 21f);
+            sched.emergencyDestination = new Vector3(26f, 1f, 28f);
             sched.emergencyActivity = "Perawatan cepat pompa air pemadam";
         }
 
@@ -686,7 +686,7 @@ namespace Karhutla.EditorTools
         // =========================================================================
         private static void BuildMasHendra(Transform root, Material mat)
         {
-            var go = SpawnNpcCapsule(root, "NPC Mas Hendra", new Vector3(0f, 1f, 28f), mat);
+            var go = SpawnNpcCapsule(root, "NPC Mas Hendra", new Vector3(0f, 1f, 20f), mat);
             var npc = go.AddComponent<NpcController>();
             npc.npcName = "Mas Hendra (Jurnalis)";
             npc.npcId = "Mas Hendra";
@@ -737,11 +737,11 @@ namespace Karhutla.EditorTools
             barter.offers.Add(new BarterOffer { itemId = ItemDatabase.Obat, stock = 2, maxStock = 4, minTier = RelationshipTier.Teman });
 
             var sched = go.AddComponent<NpcSchedule>();
-            sched.SetSlot(TimeOfDay.Pagi, "Batas Hutan Gambut", new Vector3(0f, 1f, 28f), 4f, "Dokumentasi titik panas & kanal air");
-            sched.SetSlot(TimeOfDay.Siang, "Warung Makan", new Vector3(10f, 1f, 5f), 2f, "Makan siang & menulis catatan liputan");
-            sched.SetSlot(TimeOfDay.Malam, "Pojok Baca Balai Desa", new Vector3(-5f, 1f, -4f), 2.5f, "Wawancara narasumber investigasi");
+            sched.SetSlot(TimeOfDay.Pagi, "Batas Hutan Gambut", new Vector3(0f, 1f, 32f), 4f, "Dokumentasi titik panas & kanal air");
+            sched.SetSlot(TimeOfDay.Siang, "Warung Makan", new Vector3(14f, 1f, 3.8f), 2f, "Makan siang & menulis catatan liputan");
+            sched.SetSlot(TimeOfDay.Malam, "Pojok Baca Siti", new Vector3(-14f, 1f, 4f), 2.5f, "Wawancara narasumber investigasi");
             sched.emergencyLocationName = "Pusat Media Informasi";
-            sched.emergencyDestination = new Vector3(-1f, 1f, 15f);
+            sched.emergencyDestination = new Vector3(0f, 1f, 28f);
             sched.emergencyActivity = "Rilis berita darurat kabut asap";
         }
 
@@ -750,7 +750,7 @@ namespace Karhutla.EditorTools
         // =========================================================================
         private static void BuildPakSalim(Transform root, Material mat)
         {
-            var go = SpawnNpcCapsule(root, "NPC Pak Salim", new Vector3(-30f, 1f, 26f), mat);
+            var go = SpawnNpcCapsule(root, "NPC Pak Salim", new Vector3(-36f, 1f, 38f), mat);
             var npc = go.AddComponent<NpcController>();
             npc.npcName = "Pak Salim (Tetua Adat)";
             npc.npcId = "Pak Salim";
@@ -801,11 +801,11 @@ namespace Karhutla.EditorTools
             barter.offers.Add(new BarterOffer { itemId = ItemDatabase.Obat, stock = 2, maxStock = 4 });
 
             var sched = go.AddComponent<NpcSchedule>();
-            sched.SetSlot(TimeOfDay.Pagi, "Pondok Hutan Adat", new Vector3(-30f, 1f, 26f), 3f, "Meracik jamu herbal akar gambut");
-            sched.SetSlot(TimeOfDay.Siang, "Kanal Rawa Purba", new Vector3(26f, 1f, 16f), 3f, "Memeriksa kelembapan kubah rawa");
-            sched.SetSlot(TimeOfDay.Malam, "Pondok Hutan Adat", new Vector3(-30f, 1f, 26f), 1f, "Doa keselamatan alam & istirahat");
+            sched.SetSlot(TimeOfDay.Pagi, "Pondok Hutan Adat", new Vector3(-36f, 1f, 38f), 3f, "Meracik jamu herbal akar gambut");
+            sched.SetSlot(TimeOfDay.Siang, "Dermaga Kanal Rawa", new Vector3(38f, 1f, 10f), 3f, "Memeriksa kelembapan kubah rawa");
+            sched.SetSlot(TimeOfDay.Malam, "Pondok Hutan Adat", new Vector3(-36f, 1f, 38f), 1f, "Doa keselamatan alam & istirahat");
             sched.emergencyLocationName = "Balai Adat Desa";
-            sched.emergencyDestination = new Vector3(-3f, 1f, 11f);
+            sched.emergencyDestination = new Vector3(-36f, 1f, 38f);
             sched.emergencyActivity = "Membimbing warga doa bersama & mitigasi";
         }
 
@@ -814,7 +814,7 @@ namespace Karhutla.EditorTools
         // =========================================================================
         private static void BuildRian(Transform root, Material mat)
         {
-            var go = SpawnNpcCapsule(root, "NPC Rian", new Vector3(-6f, 1f, -6f), mat);
+            var go = SpawnNpcCapsule(root, "NPC Rian", new Vector3(-4f, 1f, -14f), mat);
             var npc = go.AddComponent<NpcController>();
             npc.npcName = "Rian (Pemuda Desa)";
             npc.npcId = "Rian";
@@ -865,11 +865,11 @@ namespace Karhutla.EditorTools
             barter.offers.Add(new BarterOffer { itemId = ItemDatabase.BubukKopi, stock = 2, maxStock = 4 });
 
             var sched = go.AddComponent<NpcSchedule>();
-            sched.SetSlot(TimeOfDay.Pagi, "Bale-bale Desa", new Vector3(-6f, 1f, -6f), 3f, "Duduk mencari peluang kerja harian");
-            sched.SetSlot(TimeOfDay.Siang, "Warung Kopi", new Vector3(7f, 1f, 2f), 2f, "Bantu angkat galon air di warung");
-            sched.SetSlot(TimeOfDay.Malam, "Pos Ronda", new Vector3(-5f, 1f, 21f), 2.5f, "Main gitar & kumpul pemuda");
+            sched.SetSlot(TimeOfDay.Pagi, "Bale-bale Desa", new Vector3(-4f, 1f, -14f), 3f, "Duduk mencari peluang kerja harian");
+            sched.SetSlot(TimeOfDay.Siang, "Warung Kopi", new Vector3(14f, 1f, 3.8f), 2f, "Bantu angkat galon air di warung");
+            sched.SetSlot(TimeOfDay.Malam, "Posko Relawan", new Vector3(26f, 1f, 28f), 2.5f, "Main gitar & kumpul pemuda");
             sched.emergencyLocationName = "Posko Relawan Pemadam";
-            sched.emergencyDestination = new Vector3(-5f, 1f, 23f);
+            sched.emergencyDestination = new Vector3(26f, 1f, 28f);
             sched.emergencyActivity = "Membantu angkut selang pemadam api";
         }
 
@@ -878,7 +878,7 @@ namespace Karhutla.EditorTools
         // =========================================================================
         private static void BuildBuLinda(Transform root, Material mat)
         {
-            var go = SpawnNpcCapsule(root, "NPC Bu Linda", new Vector3(-10f, 1f, -2f), mat);
+            var go = SpawnNpcCapsule(root, "NPC Bu Linda", new Vector3(-24f, 1f, -16f), mat);
             var npc = go.AddComponent<NpcController>();
             npc.npcName = "Bu Linda (Toko Sembako)";
             npc.npcId = "Bu Linda";
@@ -932,11 +932,11 @@ namespace Karhutla.EditorTools
             barter.offers.Add(new BarterOffer { itemId = ItemDatabase.Masker, stock = 2, maxStock = 4, minTier = RelationshipTier.Teman });
 
             var sched = go.AddComponent<NpcSchedule>();
-            sched.SetSlot(TimeOfDay.Pagi, "Toko Kelontong", new Vector3(-10f, 1f, -2f), 2f, "Mengecek stok beras & minyak grosir");
-            sched.SetSlot(TimeOfDay.Siang, "Toko Kelontong", new Vector3(-10f, 1f, -2f), 2f, "Melayani pembeli sembako desa");
-            sched.SetSlot(TimeOfDay.Malam, "Rumah Toko", new Vector3(-10f, 1f, 0f), 1f, "Rekap pembukuan kas & tutup toko");
+            sched.SetSlot(TimeOfDay.Pagi, "Toko Kelontong", new Vector3(-24f, 1f, -16f), 2f, "Mengecek stok beras & minyak grosir");
+            sched.SetSlot(TimeOfDay.Siang, "Toko Kelontong", new Vector3(-24f, 1f, -16f), 2f, "Melayani pembeli sembako desa");
+            sched.SetSlot(TimeOfDay.Malam, "Rumah Toko", new Vector3(-24f, 1f, -16f), 1f, "Rekap pembukuan kas & tutup toko");
             sched.emergencyLocationName = "Gudang Sembako Darurat";
-            sched.emergencyDestination = new Vector3(-10f, 1f, -2f);
+            sched.emergencyDestination = new Vector3(-24f, 1f, -16f);
             sched.emergencyActivity = "Membagikan ransum darurat beras";
         }
 
@@ -945,7 +945,7 @@ namespace Karhutla.EditorTools
         // =========================================================================
         private static void BuildPakTejo(Transform root, Material mat)
         {
-            var go = SpawnNpcCapsule(root, "NPC Pak Tejo", new Vector3(-32f, 1f, -8f), mat);
+            var go = SpawnNpcCapsule(root, "NPC Pak Tejo", new Vector3(-44f, 1f, -16f), mat);
             var npc = go.AddComponent<NpcController>();
             npc.npcName = "Pak Tejo (Mandor Perkebunan)";
             npc.npcId = "Pak Tejo";
@@ -996,11 +996,11 @@ namespace Karhutla.EditorTools
             barter.offers.Add(new BarterOffer { itemId = ItemDatabase.Air, stock = 4, maxStock = 6 });
 
             var sched = go.AddComponent<NpcSchedule>();
-            sched.SetSlot(TimeOfDay.Pagi, "Batas Lahan Sawit", new Vector3(-32f, 1f, -8f), 3.5f, "Mengawasi kerja buruh & traktor kebun");
-            sched.SetSlot(TimeOfDay.Siang, "Balai Desa", new Vector3(-1f, 1f, 11f), 2f, "Koordinasi batas lahan dengan Kades");
-            sched.SetSlot(TimeOfDay.Malam, "Rumah Perbatasan", new Vector3(-34f, 1f, -10f), 1f, "Istirahat malam bersama keluarga");
+            sched.SetSlot(TimeOfDay.Pagi, "Batas Lahan Sawit", new Vector3(-44f, 1f, -16f), 3.5f, "Mengawasi kerja buruh & traktor kebun");
+            sched.SetSlot(TimeOfDay.Siang, "Balai Desa", new Vector3(0f, 1f, 28f), 2f, "Koordinasi batas lahan dengan Kades");
+            sched.SetSlot(TimeOfDay.Malam, "Pondok Ladang Gambut", new Vector3(-44f, 1f, -16f), 1f, "Istirahat malam bersama keluarga");
             sched.emergencyLocationName = "Posko Evakuasi Balai Desa";
-            sched.emergencyDestination = new Vector3(0f, 1f, 12f);
+            sched.emergencyDestination = new Vector3(0f, 1f, 28f);
             sched.emergencyActivity = "Menyalurkan bantuan tangki air kebun";
         }
 
@@ -1009,7 +1009,7 @@ namespace Karhutla.EditorTools
         // =========================================================================
         private static void BuildSiti(Transform root, Material mat)
         {
-            var go = SpawnNpcCapsule(root, "NPC Siti", new Vector3(-6f, 1f, -4f), mat);
+            var go = SpawnNpcCapsule(root, "NPC Siti", new Vector3(-14f, 1f, 4f), mat);
             var npc = go.AddComponent<NpcController>();
             npc.npcName = "Siti (Pelajar)";
             npc.npcId = "Siti";
@@ -1060,11 +1060,11 @@ namespace Karhutla.EditorTools
             barter.offers.Add(new BarterOffer { itemId = ItemDatabase.Oralit, stock = 2, maxStock = 4 });
 
             var sched = go.AddComponent<NpcSchedule>();
-            sched.SetSlot(TimeOfDay.Pagi, "Pojok Baca", new Vector3(-6f, 1f, -4f), 2f, "Merapikan perpustakaan & belajar");
-            sched.SetSlot(TimeOfDay.Siang, "Warung Makan", new Vector3(9f, 1f, 3f), 2f, "Makan siang & bantu sapu teras");
-            sched.SetSlot(TimeOfDay.Malam, "Rumah Warga", new Vector3(-14f, 1f, -9f), 1f, "Mengerjakan tugas sekolah di rumah");
+            sched.SetSlot(TimeOfDay.Pagi, "Pojok Baca", new Vector3(-14f, 1f, 4f), 2f, "Merapikan perpustakaan & belajar");
+            sched.SetSlot(TimeOfDay.Siang, "Warung Makan", new Vector3(14f, 1f, 3.8f), 2f, "Makan siang & bantu sapu teras");
+            sched.SetSlot(TimeOfDay.Malam, "Rumah Warga", new Vector3(-30f, 1f, 14f), 1f, "Mengerjakan tugas sekolah di rumah");
             sched.emergencyLocationName = "Ruang Anak Posko";
-            sched.emergencyDestination = new Vector3(-4f, 1f, 11f);
+            sched.emergencyDestination = new Vector3(0f, 1f, 24f);
             sched.emergencyActivity = "Pendampingan psikososial anak-anak";
         }
 
@@ -1073,7 +1073,7 @@ namespace Karhutla.EditorTools
         // =========================================================================
         private static void BuildPakYanto(Transform root, Material mat)
         {
-            var go = SpawnNpcCapsule(root, "NPC Pak Yanto", new Vector3(28f, 1f, 16f), mat);
+            var go = SpawnNpcCapsule(root, "NPC Pak Yanto", new Vector3(38f, 1f, 10f), mat);
             var npc = go.AddComponent<NpcController>();
             npc.npcName = "Pak Yanto (Nelayan Rawa)";
             npc.npcId = "Pak Yanto";
@@ -1124,11 +1124,11 @@ namespace Karhutla.EditorTools
             barter.offers.Add(new BarterOffer { itemId = ItemDatabase.Masker, stock = 2, maxStock = 4 });
 
             var sched = go.AddComponent<NpcSchedule>();
-            sched.SetSlot(TimeOfDay.Pagi, "Dermaga Rawa Gambut", new Vector3(28f, 1f, 16f), 3f, "Memeriksa jaring & perahu klotok");
-            sched.SetSlot(TimeOfDay.Siang, "Aliran Sekat Kanal", new Vector3(26f, 1f, 18f), 2.5f, "Menjaga debit air sekat kanal rawa");
-            sched.SetSlot(TimeOfDay.Malam, "Rumah Dermaga", new Vector3(30f, 1f, 15f), 1f, "Menambal jaring & istirahat");
+            sched.SetSlot(TimeOfDay.Pagi, "Dermaga Rawa Gambut", new Vector3(38f, 1f, 10f), 3f, "Memeriksa jaring & perahu klotok");
+            sched.SetSlot(TimeOfDay.Siang, "Aliran Sekat Kanal", new Vector3(38f, 1f, 14f), 2.5f, "Menjaga debit air sekat kanal rawa");
+            sched.SetSlot(TimeOfDay.Malam, "Rumah Dermaga", new Vector3(38f, 1f, 10f), 1f, "Menambal jaring & istirahat");
             sched.emergencyLocationName = "Dermaga Evakuasi Jalur Air";
-            sched.emergencyDestination = new Vector3(28f, 1f, 17f);
+            sched.emergencyDestination = new Vector3(38f, 1f, 10f);
             sched.emergencyActivity = "Menyiapkan perahu evakuasi jalur rawa";
         }
     }
